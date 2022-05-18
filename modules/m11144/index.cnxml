@@ -1,0 +1,184 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>The MPEG Standard</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>775f88c5-2c7c-44d4-8c1c-c14f66f9fc4b</md:uuid>
+</metadata>
+  
+  
+  <content>
+    
+    <para id="para1">
+      As a sequel to the JPEG standards committee, the Moving Picture
+      Experts Group (MPEG) was set up in the mid 1980s to agree
+      standards for video sequence compression.
+    </para>
+    
+    <para id="para2">
+      Their first standard was MPEG-1, designed for CD-ROM
+      applications at 1.5 Mb/s, and their more recent standard,
+      MPEG-2, is aimed at broadcast quality TV signals at 4 to 10 Mb/s
+      and is also suitable for high-definition TV (HDTV) at 20 Mb/s.
+      We shall not go into the detailed differences between these
+      standards, but simply describe some of their important features.
+      MPEG-2 is used for digital TV and DVD in the UK and throughout
+      the world.
+    </para>
+
+    <para id="para3">
+      MPEG coders all use the MCPC structure of <link document="m11142" target-id="figure1" strength="2">this previous figure</link>, and
+      employ the
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> DCT as the basic transform process.  So in many
+      respects they are similar to H.261 coders, except that they
+      operate with higher resolution frames and higher bit rates.
+    </para>
+
+    <para id="para4">
+      The main difference from H.261 is the concept of a Group of
+      Pictures (GOP) Layer in the coding hierarchy, shown in <link target-id="figure2" strength="2"/> .  However we describe the other
+      layers first:
+      
+      <list id="list1">
+	<item>
+	  The Sequence Layer contains a complete image sequence,
+	  possibly hundreds or thousands of frames.
+	</item>
+	<item>
+	  The Picture Layer contains the code for a single frame,
+	  which may either be coded in absolute form or coded as the
+	  difference from a predicted frame.
+	</item>
+	<item>
+	  The Slice Layer contains one row of macroblocks (
+	  <m:math>
+	    <m:apply>
+	      <m:times/>
+	      <m:cn>16</m:cn>
+	      <m:cn>16</m:cn>
+	    </m:apply>
+	  </m:math> pels) from a frame.  (48 macroblocks give a row
+	  768 pels wide.)
+	</item>
+	<item>
+	  The Macroblock Layer contains a single macroblock -- usually
+	  4 blocks of luminance, 2 blocks of chrominance and a motion
+	  vector.
+	</item>
+	<item>
+	  The Block Layer contains the DCT coefficients for a single 
+	  <m:math>
+	    <m:apply>
+	      <m:times/>
+	      <m:cn>8</m:cn>
+	      <m:cn>8</m:cn>
+	    </m:apply>
+	  </m:math> block of pels, coded almost as in JPEG using
+	  zig-zag scanning and run-amplitude Huffman codes.
+	</item>
+      </list>
+    </para>
+
+    <para id="para5">
+      The GOP Layer contains a small number of frames (typically 12)
+      coded so that they can be decoded completely as a unit, without
+      reference to frames outside of the group.  There are three types
+      of frame:
+
+      <list id="list2">
+	<item>
+	  <term>Intra coded frames</term> (I) -- which are coded as
+	  single frames as in JPEG, without reference to any other
+	  frames.
+	</item>
+	<item>
+	  <term>Predictive coded frames</term> (P) -- which are coded
+	  as the difference from a motion compensated prediction
+	  frame, generated from an earlier I or P frame in the GOP.
+	</item>
+	<item>
+	  <term>Bi-directional coded frames</term> (B) -- which are
+	  coded as the difference from a bi-directionally interpolated
+	  frame, generated from earlier and later I or P frames in the
+	  sequence (with motion compensation).
+	</item>
+      </list>
+    </para>
+    
+    <figure id="figure2">
+      <media id="idp1919968" alt=""><image src="../../media/figure2-4caf.png" mime-type="image/png"/></media>
+      <caption>MPEG Layers.</caption>
+    </figure>
+    
+    <para id="para6">
+      The main purpose of the GOP is to allow editing and splicing of
+      video material from different sources and to allow rapid forward
+      or reverse searching through sequences.  A GOP usually
+      represents about half a second of the image sequence.
+    </para>
+    
+    <para id="para7">
+      <link target-id="figure3" strength="2"/> shows a typical GOP and
+      how the coded frames depend on each other.  The first frame of
+      the GOP is always an I frame, which may be decoded without
+      needing data from any other frame.  At regular intervals through
+      the GOP, there are P frames, which are coded relative to a
+      prediction from the I frame or previous P frame in the GOP.
+      Between each pair of I / P frames are one or more B frames.
+    </para>
+
+    <figure id="figure3">
+      <media id="idp493120" alt=""><image src="../../media/figure3-d076.png" mime-type="image/png"/></media>
+      <caption>
+        GOP Layer -- Intra (I), Predicted (P) and Bi-directional (B) frames.
+      </caption>
+    </figure>
+  
+    <para id="para8">
+      The I frame in each GOP requires the most bits per frame and
+      provides the initial reference for all other frames in the GOP.
+      Each P frame typically requires about one third of the bits of
+      an I frame, and there may be 3 of these per GOP.  Each B frame
+      requires about half the bits of a P frame and there may be 8 of
+      these per GOP.  Hence the coded bits are split about evenly
+      between the three frame types.
+    </para>
+
+    <para id="para9">
+      B frames require fewer bits than P frames mainly because
+      bi-directional prediction allows uncovered background areas to
+      be predicted from a subsequent frame.  The motion-compensated
+      prediction in a B frame may be forward, backward, or a
+      combination of the two (selected in the macroblock layer).
+      Since no other frames are predicted from them, B frames may be
+      coarsely quantised in areas of high motion and comprise mainly
+      motion prediction information elsewhere.
+    </para>
+
+    <para id="para10">
+      In order to keep all frames in the coded bit stream causal, B
+      frames are always transmitted <emphasis>after</emphasis> the I/P
+      frames to which they refer, as shown at the bottom of <link target-id="figure3" strength="2"/> .
+    </para>
+
+    <para id="para11">
+      One of the main ways that the H.263 (enhanced H.261) standard is
+      able to code at very low bit rates is the incorporation of the B
+      frame concept.
+    </para>
+
+    <para id="para12">
+      Considerable research work at present is being directed towards
+    more sophisticated motion models, which are based more on the
+    outlines of objects rather than on simple blocks.  These will form
+    the basis of extensions to the new low bit-rate video standard,
+    MPEG-4 (MPEG-3 is an <emphasis>audio</emphasis> coding standard).
+    </para>
+
+  </content>
+</document>

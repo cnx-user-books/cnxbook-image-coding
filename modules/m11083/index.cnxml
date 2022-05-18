@@ -1,0 +1,38 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>Introduction</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>ee9e3d8a-17c1-44b3-8fd0-6efeccd74a70</md:uuid>
+</metadata>
+  
+  <content>
+    <para id="para1">
+      Image Coding (often more correctly known as Image Compression)
+      is the art / science of representing images with the
+      <emphasis>least information</emphasis> (no. of bits) consistent
+      with achieving an <emphasis>acceptable image
+      quality / usefulness</emphasis>.
+    </para>
+
+    <para id="para2">
+      In order to do this, we try to take advantage of:
+
+      <list id="list1" list-type="enumerated">
+	<item>
+	  Physiological characteristics of human vision;
+	</item>
+	<item>
+	  Statistical characteristics of typical images;
+	</item>
+	<item>
+	  Efficient binary source coding methods.
+	</item>
+      </list>
+
+      We shall consider these in turn.
+    </para>
+
+
+  </content>
+  
+</document>

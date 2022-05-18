@@ -1,0 +1,404 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>The 2-D DWT</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>a53d13be-b4f1-47c7-a783-dc965f5e945d</md:uuid>
+</metadata>
+  
+
+  <content>
+    <para id="para1">
+      We have already seen in our discussion of <link document="m11087" strength="2">The Haar Transform</link> how the 1-D Haar
+      transform (or wavelet) could be extended to 2-D by filtering the
+      rows and columns of an image separably.
+    </para>
+
+    <para id="para2">
+      All 1-D 2-band wavelet filter banks can be extended in a similar
+      way. <link target-id="figure13" strength="2"/> shows two levels of
+      a 2-D filter tree. The input image at each level is split into 4
+      bands (Lo-Lo =
+      <m:math>
+	<m:ci type="vector"><m:msub>
+	    <m:mi>y</m:mi>
+	    <m:mrow>
+	      <m:mn>0</m:mn>
+	      <m:mn>0</m:mn>
+	    </m:mrow>
+	  </m:msub></m:ci>
+      </m:math>, Lo-Hi = 
+      <m:math>
+	<m:ci type="vector">
+	  <m:msub>
+	    <m:mi>y</m:mi>
+	    <m:mrow>
+	      <m:mn>0</m:mn>
+	      <m:mn>1</m:mn>
+	    </m:mrow>
+	  </m:msub>
+	</m:ci>
+      </m:math>, Hi-Lo = 
+      <m:math>
+	<m:ci type="vector">
+	  <m:msub>
+	    <m:mi>y</m:mi>
+	    <m:mrow>
+	      <m:mn>1</m:mn>
+	      <m:mn>0</m:mn>
+	    </m:mrow>
+	  </m:msub>
+	</m:ci>
+      </m:math>, and Hi-Hi = 
+      <m:math>
+	<m:ci type="vector">
+	  <m:msub>
+	    <m:mi>y</m:mi>
+	    <m:mrow>
+	      <m:mn>1</m:mn>
+	      <m:mn>1</m:mn>
+	    </m:mrow>
+	  </m:msub>
+	</m:ci>
+      </m:math>) using the lowpass and highpass wavelet filters on the
+      rows and columns in turn. The Lo-Lo band subimage
+      <m:math>
+	<m:ci type="vector"><m:msub>
+	    <m:mi>y</m:mi>
+	    <m:mrow>
+	      <m:mn>0</m:mn>
+	      <m:mn>0</m:mn>
+	    </m:mrow>
+	  </m:msub></m:ci>
+      </m:math>
+      is then used as the input image to the next level. Typically 4
+      levels are used, as for the Haar transform.
+    </para>
+
+    <figure id="figure13">
+      <media id="idp7457648" alt=""><image src="../../media/figure13-b912.png" mime-type="image/png"/></media>
+      <caption>
+	Two levels of a 2-D filter tree, formed from 1-D lowpass (
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math>) and highpass 
+	(<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	  </m:ci>
+	</m:math>) filters.
+      </caption>
+    </figure>
+
+    <para id="para3">
+      Filtering of the rows of an image by 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">
+	    <m:msub><m:mi>H</m:mi><m:mi>a</m:mi></m:msub>
+	  </m:ci>
+	  <m:ci>
+	    <m:msub><m:mi>z</m:mi><m:mn>1</m:mn></m:msub>
+	  </m:ci>
+	</m:apply>
+      </m:math> and of the columns by 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">
+	    <m:msub><m:mi>H</m:mi><m:mi>b</m:mi></m:msub>
+	  </m:ci>
+	  <m:ci>
+	    <m:msub><m:mi>z</m:mi><m:mn>2</m:mn></m:msub>
+	  </m:ci>
+	</m:apply>
+      </m:math>, where <m:math><m:ci>a</m:ci></m:math>,
+      <m:math><m:ci>b</m:ci></m:math> = 0 or 1, is equivalent to
+      filtering by the 2-D filter:
+      <equation id="eq43">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub>
+		  <m:mi>H</m:mi>
+		  <m:mrow>
+		    <m:mi>a</m:mi>
+		    <m:mi>b</m:mi>
+		  </m:mrow>
+		</m:msub>
+	      </m:ci>
+	      <m:ci>
+		<m:msub><m:mi>z</m:mi><m:mn>1</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>
+		<m:msub><m:mi>z</m:mi><m:mn>2</m:mn></m:msub>
+	      </m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>H</m:mi><m:mi>a</m:mi></m:msub>
+		</m:ci>
+		<m:ci>
+		  <m:msub><m:mi>z</m:mi><m:mn>1</m:mn></m:msub>
+		</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>H</m:mi><m:mi>b</m:mi></m:msub>
+		</m:ci>
+		<m:ci>
+		  <m:msub><m:mi>z</m:mi><m:mn>2</m:mn></m:msub>
+		</m:ci>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation> 
+
+      In the spatial domain, this is equivalent to convolving the
+      image matrix with the 2-D impulse response matrix
+      
+      <equation id="eq44">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:selector/>
+	      <m:ci type="matrix">h</m:ci>
+	      <m:ci>a</m:ci>
+	      <m:ci>b</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:selector/>
+		<m:ci type="vector">h</m:ci>
+		<m:ci>a</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:transpose/>
+		<m:apply>
+		  <m:selector/>
+		  <m:ci type="vector">h</m:ci>
+		  <m:ci>b</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation> 
+
+      where 
+      <m:math>
+	<m:apply>
+	  <m:selector/>
+	  <m:ci type="vector">h</m:ci>
+	  <m:ci>a</m:ci>
+	</m:apply>
+      </m:math> and 
+      <m:math>
+	<m:apply>
+	  <m:selector/>
+	  <m:ci type="vector">h</m:ci>
+	  <m:ci>b</m:ci>
+	</m:apply>
+      </m:math> are column vectors of the 1-D filter impulse
+      responses. However note that performing the filtering separably
+      (i.e. as separate 1-D filterings of the rows and columns) is
+      much more computationally efficient.
+    </para>
+
+    <para id="para4">
+      To obtain the impulse responses of the four 2-D filters at each
+      level of the 2-D DWT we form
+      <m:math>
+	<m:apply>
+	  <m:selector/>
+	  <m:ci type="matrix">h</m:ci>
+	  <m:ci>a</m:ci>
+	  <m:ci>b</m:ci>
+	</m:apply>
+      </m:math> from 
+      <m:math>
+	<m:apply>
+	  <m:selector/>
+	  <m:ci type="vector">h</m:ci>
+	  <m:cn>0</m:cn>
+	</m:apply>
+      </m:math> and 
+      <m:math>
+	<m:apply>
+	  <m:selector/>
+	  <m:ci type="vector">h</m:ci>
+	  <m:cn>1</m:cn>
+	</m:apply>
+      </m:math> using <link target-id="eq44" strength="2"/> with 
+      <m:math>
+	<m:ci>
+	  <m:mrow>
+	    <m:mi>a</m:mi>
+	    <m:mi>b</m:mi>
+	  </m:mrow></m:ci>
+      </m:math> = 00, 01, 10 and 11. 
+    </para>
+
+    <figure id="figure14">
+      <media id="idp318656" alt=""><image src="../../media/figure14-cc4e.png" mime-type="image/png"/></media>
+      <caption>
+	2-D impulse responses of the level-4 wavelets and scaling
+	functions derived from the LeGall 3,5-tap filters (a), and the
+	near-balanced 5,7-tap (b) and 13,19-tap (c) filters.
+      </caption>
+    </figure>
+
+    <para id="para5">
+      <link target-id="figure14" strength="2"/> shows the impulse
+      responses at level 4 as images for three 2-D wavelet filter
+      sets, formed from the following 1-D wavelet filter sets:
+
+      <list id="list1" list-type="enumerated">
+	<item>
+	  The LeGall 3,5-tap filters: 
+	  <m:math>
+	    <m:ci>
+	      <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	    </m:ci>
+	  </m:math> and 
+	  <m:math>
+	    <m:ci>
+	      <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	    </m:ci>
+	  </m:math> from <link document="m11139" target-id="eq33a" strength="2">these equations</link>, and <link document="m11139" target-id="eq34a" strength="2">these equations</link> in our
+	  discussion of Good Filters / Wavelets.
+	</item>
+
+	<item>
+	  The near-balanced 5,7-tap filters: substituting 
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci>Z</m:ci>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:ci>z</m:ci>
+		  <m:apply>
+		    <m:inverse/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math> into <link document="m11139" target-id="eq40" strength="2">this previous equation</link>.
+	</item>
+
+	<item>
+	  The near-balanced 13,19-tap filters: substituting <link document="m11139" target-id="eq41" strength="2">this
+	  equation</link> into <link document="m11139" target-id="eq40" strength="2">this equation</link>.
+	</item>
+      </list>
+
+      Note the sharp points in <link target-id="figure14" strength="2"/>(b), produced by the sharp peaks in the 1-D
+      wavelets of <link document="m11139" target-id="figure9" strength="2">this previous figure</link> (Impulse and frequency
+      responses of the 4-level tree of near-balanced 5,7-tap
+      filters). These result in noticeable artefacts in reconstructed
+      images when these wavelets are used. The smoother wavelets of
+      <link target-id="figure14" strength="2"/>(c) are much better in
+      this respect.
+    </para>
+
+    <para id="para6">
+      The 2-D frequency responses of the level 1 filters, derived from
+      the LeGall 3,5-tap filters, are shown in figs <link target-id="figure15" strength="2"/> (in mesh form) and <link target-id="figure16" strength="2"/> (in contour form). These are
+      obtained by substituting
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>
+	    <m:msub><m:mi>z</m:mi><m:mn>1</m:mn></m:msub>
+	  </m:ci>
+	  <m:apply>
+	    <m:exp/>
+	    <m:apply>
+	      <m:times/>
+	      <m:imaginaryi/>
+	      <m:ci>
+		<m:msub><m:mi>ω</m:mi><m:mn>1</m:mn></m:msub>
+	      </m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:apply>
+      </m:math> and 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>
+	    <m:msub><m:mi>z</m:mi><m:mn>2</m:mn></m:msub>
+	  </m:ci>
+	  <m:apply>
+	    <m:exp/>
+	    <m:apply>
+	      <m:times/>
+	      <m:imaginaryi/>
+	      <m:ci>
+		<m:msub><m:mi>ω</m:mi><m:mn>2</m:mn></m:msub>
+	      </m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:apply>
+      </m:math> into <link target-id="eq43" strength="2"/>. <link target-id="eq43" strength="2"/> demonstrates that the 2-D frequency
+      response is just the product of the responses of the relevant
+      1-D filters.
+    </para>
+    
+    <figure id="figure15">
+      <media id="idp9110688" alt=""><image src="../../media/figure15-b735.png" mime-type="image/png"/></media>
+      <caption>
+	Mesh frequency response plots of the 2-D level 1 filters,
+	derived from the LeGall 3,5-tap filters.
+      </caption>
+    </figure>
+
+    <figure id="figure16">
+      <media id="idm399920" alt=""><image src="../../media/figure16-43d1.png" mime-type="image/png"/></media>
+      <caption>
+	Contour plots of the frequency responses of <link target-id="figure15" strength="2"/>.
+      </caption>
+    </figure>
+
+    <para id="para7">
+     <link target-id="figure17" strength="2"/> and <link target-id="figure18" strength="2"/> are the equivalent plots for the
+     2-D filters derived from the near-balanced 13,19-tap filters. We
+     see the much sharper cut-offs and better defined pass and stop
+     bands of these filters. The high-band filters no longer exhibit
+     gain peaks, which are rather undesirable features of the LeGall
+     5-tap filters.
+    </para>
+
+    <figure id="figure17">
+      <media id="idm403664" alt=""><image src="../../media/figure17-e121.png" mime-type="image/png"/></media>
+      <caption>
+	Mesh frequency response plots of the 2-D level 1 filters,
+	derived from the near-balanced 13,19-tap filters.
+      </caption>
+    </figure>
+
+    <figure id="figure18">
+      <media id="idp6466368" alt=""><image src="../../media/figure18-6bb1.png" mime-type="image/png"/></media>
+      <caption>
+	Contour plots of the frequency responses of <link target-id="figure17" strength="2"/>.
+      </caption>
+    </figure>
+
+  </content>
+</document>

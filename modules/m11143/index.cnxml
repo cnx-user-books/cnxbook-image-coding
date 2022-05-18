@@ -1,0 +1,89 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>Motion Estimation</title>
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>b2a5bc63-b42f-44a9-adba-a1f7c804bafc</md:uuid>
+</metadata>
+
+  <content>
+    <para id="para1">
+      Motion estimation is the processes which generates the motion
+      vectors that determine how each motion compensated prediction
+      frame is created from the previous frame.
+    </para>
+
+    <para id="para2">
+      <term>Block Matching</term> (BM) is the most common method of
+      motion estimation.  Typically each macroblock (
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>16</m:cn>
+	  <m:cn>16</m:cn>
+	</m:apply>
+      </m:math> pels) in the new frame is compared with shifted
+      regions of the same size from the previous decoded frame, and
+      the shift which results in the minimum error is selected as the
+      best motion vector for that macroblock.  The motion compensated
+      prediction frame is then formed from all the shifted regions
+      from the previous decoded frame.
+    </para>
+    
+    <para id="para3">
+      BM can be very computationally demanding if all shifts of each
+      macroblock are analysed.  For example, to analyse shifts of up
+      to
+      <m:math>
+	<m:apply>
+	  <m:mo>±</m:mo>
+	  <m:cn>15</m:cn>
+	</m:apply>
+      </m:math> pels in the horizontal <emphasis>and</emphasis>
+      vertical directions requires
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>31</m:cn>
+	    <m:cn>31</m:cn>
+	  </m:apply>
+	  <m:cn>961</m:cn>
+	</m:apply>
+      </m:math> shifts, each of which involves 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>16</m:cn>
+	    <m:cn>16</m:cn>
+	  </m:apply>
+	  <m:cn>256</m:cn>
+	</m:apply>
+      </m:math> pel difference computations for a given macroblock.
+      This is known as <term>exhaustive search BM</term>.
+    </para>
+
+    <para id="para4">
+      Significant savings can be made with <term>hierarchical
+      BM</term>, in which an approximate motion estimate is obtained
+      from exhaustive search using a lowpass subsampled pair of
+      images, and then the estimate is refined by a small local search
+      using the full resolution images.  Subsampling 2:1 in each
+      direction reduces the number of macroblock pels
+      <emphasis>and</emphasis> the number of shifts by 4:1, producing
+      a computational saving of 16:1!
+    </para>
+
+    <para id="para5">
+      There are many other approaches to motion estimation, some using
+      the frequency or wavelet domains, and designers have considered
+      scope to invent new methods since this process does not need to
+      be specified in coding standards.  The standards need only
+      specify how the motion vectors should be interpreted by the
+      decoder (a much simpler process).  Unfortunately, we do not have
+      time to discuss these other approaches here.
+    </para>
+
+  </content>
+</document>

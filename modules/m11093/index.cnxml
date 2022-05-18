@@ -1,0 +1,386 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>Fast Algorithms for the DCT </title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>86fcea92-3385-48d6-bc27-eef29c3761de</md:uuid>
+</metadata>
+
+
+  <content>
+    <para id="para1">
+      The basic <m:math><m:ci>n</m:ci></m:math>-point DCT requires 
+      <m:math>
+	<m:apply>
+	  <m:power/>
+	  <m:ci>n</m:ci>
+	  <m:cn>2</m:cn>
+	</m:apply>
+      </m:math> multiplications and 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:ci>n</m:ci>
+	  <m:apply>
+	    <m:minus/>
+	    <m:ci>n</m:ci>
+	    <m:cn>1</m:cn>
+	  </m:apply>
+	</m:apply>
+      </m:math> additions to calculate 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci type="vector">y</m:ci>
+	  <m:apply>
+	    <m:times/>
+	    <m:ci type="matrix">T</m:ci>
+	    <m:ci type="vector">x</m:ci>
+	  </m:apply>
+	</m:apply>
+      </m:math> (64 mults and 56 adds for 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>n</m:ci>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math>).
+    </para>
+
+    <para id="para2">
+      From the <link document="m11092" target-id="figure1" strength="2">figure</link> in our discussion of DCT, it is clear
+      that symmetries exist in the DCT basis functions. These can be
+      exploited to reduce the computation load of the DCT.
+    </para>
+
+    <para id="para3">
+      All the odd rows of <m:math><m:ci type="matrix">T</m:ci></m:math> in this <link document="m11092" target-id="eq4" strength="2">equation</link> from our discussion of
+      DCT possess even symmetry about their centres and all the even
+      rows possess odd symmetry. Hence we may form:
+
+      <equation id="eq5">
+	<m:math>
+	  <m:apply>
+	    <m:forall/>
+	    <m:bvar><m:ci>i</m:ci></m:bvar>
+	    <m:condition>
+	      <m:apply>
+		<m:eq/>
+		<m:ci>i</m:ci>
+		<m:apply>
+		  <m:tendsto/>
+		  <m:cn>1</m:cn>
+		  <m:cn>4</m:cn>
+		</m:apply>
+	      </m:apply>
+	    </m:condition>
+	    <m:apply>
+	      <m:and/>
+	      <m:apply>
+		<m:eq/>
+		<m:apply>
+		  <m:ci type="fn">u</m:ci>
+		  <m:ci>i</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:apply>
+		    <m:ci type="fn">x</m:ci>
+		    <m:ci>i</m:ci>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">x</m:ci>
+		    <m:apply>
+		      <m:minus/>
+		      <m:cn>9</m:cn>
+		      <m:ci>i</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:eq/>
+		<m:apply>
+		  <m:ci type="fn">v</m:ci>
+		  <m:ci>i</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:minus/>
+		  <m:apply>
+		    <m:ci type="fn">x</m:ci>
+		    <m:ci>i</m:ci>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">x</m:ci>
+		    <m:apply>
+		      <m:minus/>
+		      <m:cn>9</m:cn>
+		      <m:ci>i</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      and then form the odd and even terms in <m:math><m:ci type="vector">y</m:ci></m:math> from two 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>4</m:cn>
+	  <m:cn>4</m:cn>
+	</m:apply>
+      </m:math> transforms:
+
+      <equation id="eq6">
+	<m:math>
+	  <m:apply>
+	    <m:and/>
+	    <m:apply>
+	      <m:eq/>
+	      <m:matrix>
+		<m:matrixrow>
+		  <m:apply>
+		    <m:ci type="fn">y</m:ci>
+		    <m:cn>1</m:cn>
+		  </m:apply>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:apply>
+		    <m:ci type="fn">y</m:ci>
+		    <m:cn>3</m:cn>
+		  </m:apply>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:apply>
+		    <m:ci type="fn">y</m:ci>
+		    <m:cn>5</m:cn>
+		  </m:apply>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:apply>
+		    <m:ci type="fn">y</m:ci>
+		    <m:cn>7</m:cn>
+		  </m:apply>
+		</m:matrixrow>
+	      </m:matrix>
+	      <m:apply>
+		<m:times/>
+		<m:ci type="matrix">
+		  <m:msub><m:mi>T</m:mi>
+		    <m:mrow>
+		      <m:mi>left</m:mi>
+		      <m:mo>,</m:mo>
+		      <m:mi>odd</m:mi>
+		    </m:mrow>
+		  </m:msub>
+		</m:ci>
+		<m:ci type="vector">u</m:ci>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:eq/>
+	      <m:matrix>
+		<m:matrixrow>
+		  <m:apply>
+		    <m:ci type="fn">y</m:ci>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:matrixrow>
+		<m:matrixrow>
+		<m:apply>
+		    <m:ci type="fn">y</m:ci>
+		    <m:cn>4</m:cn>
+		  </m:apply>
+		</m:matrixrow>
+		<m:matrixrow>
+		<m:apply>
+		    <m:ci type="fn">y</m:ci>
+		    <m:cn>6</m:cn>
+		  </m:apply>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:apply>
+		    <m:ci type="fn">y</m:ci>
+		    <m:cn>8</m:cn>
+		  </m:apply>
+		</m:matrixrow>
+	      </m:matrix>
+	      <m:apply>
+		<m:times/>
+		<m:ci type="matrix">
+		  <m:msub><m:mi>T</m:mi>
+		    <m:mrow>
+		      <m:mi>left</m:mi>
+		      <m:mo>,</m:mo>
+		      <m:mi>even</m:mi>
+		    </m:mrow>
+		  </m:msub>
+		</m:ci>
+		<m:ci type="vector">v</m:ci>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      where 
+      <m:math>
+	<m:ci type="matrix">
+	  <m:msub><m:mi>T</m:mi>
+	    <m:mrow>
+	      <m:mi>left</m:mi>
+	      <m:mo>,</m:mo>
+	      <m:mi>odd</m:mi>
+	    </m:mrow>
+	  </m:msub>
+	</m:ci>
+      </m:math> and 
+       <m:math>
+	<m:ci type="matrix">
+	  <m:msub><m:mi>T</m:mi>
+	    <m:mrow>
+	      <m:mi>left</m:mi>
+	      <m:mo>,</m:mo>
+	      <m:mi>even</m:mi>
+	    </m:mrow>
+	  </m:msub>
+	</m:ci>
+      </m:math> are the <m:math><m:cn>4</m:cn></m:math>x
+      <m:math><m:cn>4</m:cn></m:math> matrices formed by the left
+      halves of the odd and even rows of <m:math><m:ci type="matrix">T</m:ci></m:math>.
+    </para>
+
+    <para id="para4">
+      This reduces the computation to 8 add/subtract operations for
+      <link target-id="eq5" strength="2"/> and 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>2</m:cn>
+	  <m:cn>16</m:cn>
+	</m:apply>
+      </m:math> mults and 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>2</m:cn>
+	  <m:cn>12</m:cn>
+	</m:apply>
+      </m:math> adds for <link target-id="eq6" strength="2"/> - almost
+      halving the total computation load.
+    </para>
+
+    <para id="para5">
+      The matrix 
+      <m:math>
+	<m:ci type="matrix">
+	  <m:msub><m:mi>T</m:mi>
+	    <m:mrow>
+	      <m:mi>left</m:mi>
+	      <m:mo>,</m:mo>
+	      <m:mi>even</m:mi>
+	    </m:mrow>
+	  </m:msub>
+	</m:ci>
+      </m:math> cannot easily be simplified much further, but 
+       <m:math>
+	<m:ci type="matrix">
+	  <m:msub><m:mi>T</m:mi>
+	    <m:mrow>
+	      <m:mi>left</m:mi>
+	      <m:mo>,</m:mo>
+	      <m:mi>odd</m:mi>
+	    </m:mrow>
+	  </m:msub>
+	</m:ci>
+      </m:math> can, as it possesses the same symmetries as
+      <m:math><m:ci type="matrix">T</m:ci></m:math> (it is equivalent
+      to a 4-point DCT matrix). Hence we may use the same technique on
+      this matrix to reduce the 16 mults and 12 adds for this product
+      to 4 add/subtract operations followed by a pair of
+      <m:math><m:cn>2</m:cn></m:math> x <m:math><m:cn>2</m:cn></m:math>
+      matrix products, requiring
+       <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>2</m:cn>
+	  <m:cn>4</m:cn>
+	</m:apply>
+      </m:math> mults and 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>2</m:cn>
+	  <m:cn>2</m:cn>
+	</m:apply>
+      </m:math> adds. Finally two of these mults may be saved since
+      one of the <m:math><m:cn>2</m:cn></m:math> x
+      <m:math><m:cn>2</m:cn></m:math>matrices is just a scaled
+      add/subtract matrix (like the Haar transform).
+    </para>
+
+    <para id="para6">
+      The total computation load for the 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> DCT then becomes:
+      
+      <list id="list1">
+	<item>
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>8</m:cn>
+		  <m:cn>12</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>4</m:cn>
+		  <m:cn>2</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+	      </m:apply>
+	      <m:cn>28</m:cn>
+	    </m:apply>
+	  </m:math> add/subtract operations;
+	</item>
+
+	<item>
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:plus/>
+		<m:cn>16</m:cn>
+		<m:cn>4</m:cn>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:cn>22</m:cn>
+	    </m:apply>
+	  </m:math> multiply operations.
+	</item>
+      </list>
+
+      More complicated algorithms exist (JPEG Book, sections 4.3.2 to
+      4.3.5) which reduce the number of multiplies further. However
+      these all require more intermediate results to be stored. In
+      modern DSP chips this can cost more CPU cycles than the extra
+      multiplications which can often be done simultaneously with
+      additions. Hence the simple approach given above is frequently
+      optimal.
+
+    </para>   
+  </content>
+  
+</document>

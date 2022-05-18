@@ -1,0 +1,791 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>The Discrete Cosine Transform (DCT)</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>23bb9e3c-28b9-4c2f-992d-b15b51e4d3e4</md:uuid>
+</metadata>
+  
+
+  <content>
+    <para id="para1">
+      The main standard for image compression in current use is the
+      JPEG (Joint Picture Experts Group) standard, devised and refined
+      over the period 1985 to 1993. It is formally known as ISO Draft
+      International standard 10981-1 and CCITT Recommendation T.81,
+      and is described in depth in The JPEG Book by W B Pennebaker and
+      J L Mitchell, Van Nostrand Reinhold 1993.
+    </para>
+
+    <para id="para2">
+      We shall briefly outline the baseline version of JPEG but first
+      we consider its energy compression technique - the discrete
+      cosine transform (DCT).
+    </para>
+
+    <section id="sec1">
+      <title>The Discrete Cosine Transform (DCT)</title>
+
+      <para id="sec1para1">
+	In <link document="m11087" target-id="eq2" strength="2">this
+	equation</link> from our discussion of the Haar transform, we
+	met the 2-point Haar transform and in <link document="m11087" target-id="eq3" strength="2">this equation</link> we saw that it
+	can be easily inverted if the transform matrix <m:math><m:ci type="matrix">T</m:ci></m:math> is orthonormal so that
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:inverse/>
+	      <m:ci type="matrix">T</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:transpose/>
+	      <m:ci type="matrix">T</m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:math>.
+      </para>
+
+      <para id="sec1para2">
+	If <m:math><m:ci type="matrix">T</m:ci></m:math> is of size
+	<m:math><m:ci>n</m:ci></m:math> x <m:math><m:ci>n</m:ci></m:math>,
+	where 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>n</m:ci>
+	    <m:apply>
+	      <m:power/>
+	      <m:cn>2</m:cn>
+	      <m:ci>m</m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:math>, then we may easily generate larger orthonormal matrices,
+	which lead to definitions of larger transforms.
+      </para>
+
+      <para id="sec1para3">
+	An <m:math><m:ci>n</m:ci></m:math>-point transform is defined as:
+	<equation id="eq1">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:matrix>
+		<m:matrixrow>
+		  <m:apply>
+		    <m:ci type="fn">y</m:ci>
+		    <m:cn>1</m:cn>
+		  </m:apply>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:ci>…</m:ci>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:apply>
+		    <m:ci type="fn">y</m:ci>
+		    <m:ci>n</m:ci>
+		  </m:apply>
+		</m:matrixrow>
+	      </m:matrix>
+	      <m:apply>
+		<m:times/>
+		<m:ci type="matrix">T</m:ci>
+		<m:matrix>
+		  <m:matrixrow>
+		    <m:apply>
+		      <m:ci type="fn">x</m:ci>
+		      <m:cn>1</m:cn>
+		    </m:apply>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:ci>…</m:ci>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:apply>
+		      <m:ci type="fn">x</m:ci>
+		      <m:ci>n</m:ci>
+		    </m:apply>
+		  </m:matrixrow>
+		</m:matrix>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	where 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci type="matrix">T</m:ci>
+	    <m:matrix>
+	      <m:matrixrow>
+		<m:apply>
+		  <m:selector/>
+		  <m:ci type="matrix">t</m:ci>
+		  <m:cn>1</m:cn>
+		  <m:cn>1</m:cn>
+		</m:apply>
+		<m:ci>…</m:ci>
+		<m:apply>
+		  <m:selector/>
+		  <m:ci type="matrix">t</m:ci>
+		  <m:cn>1</m:cn>
+		  <m:ci>n</m:ci>
+		</m:apply>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:ci>⋮</m:ci>
+		<m:ci>⋮</m:ci>
+		<m:ci>⋮</m:ci>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:apply>
+		  <m:selector/>
+		  <m:ci type="matrix">t</m:ci>
+		  <m:ci>n</m:ci>
+		  <m:cn>1</m:cn>
+		</m:apply>
+		<m:ci>…</m:ci>
+		<m:apply>
+		  <m:selector/>
+		  <m:ci type="matrix">t</m:ci>
+		  <m:ci>n</m:ci>
+		  <m:ci>n</m:ci>
+		</m:apply>
+	      </m:matrixrow>
+	    </m:matrix>
+	  </m:apply>
+	</m:math>
+      </para>
+
+      <para id="sec1para4">
+	A 4-point orthonormal transform matrix that is equivalent to 2 levels
+	of the Haar transform is:
+
+	<equation id="eq2">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci type="matrix">T</m:ci>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:root/>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:apply>
+		<m:matrix>
+		  <m:matrixrow>
+		    <m:cn>1</m:cn>
+		    <m:cn>0</m:cn>
+		    <m:cn>1</m:cn>
+		    <m:cn>0</m:cn>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:cn>1</m:cn>
+		    <m:cn>0</m:cn>
+		    <m:cn>-1</m:cn>
+		    <m:cn>0</m:cn>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:cn>0</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		    <m:cn>0</m:cn>
+		    <m:cn>0</m:cn>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:cn>0</m:cn>
+		    <m:cn>0</m:cn>
+		    <m:cn>0</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:matrixrow>
+		</m:matrix>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:root/>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:apply>
+		<m:matrix>
+		  <m:matrixrow>
+		    <m:cn>1</m:cn>
+		    <m:cn>1</m:cn>
+		    <m:cn>0</m:cn>
+		    <m:cn>0</m:cn>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:cn>1</m:cn>
+		    <m:cn>-1</m:cn>
+		    <m:cn>0</m:cn>
+		    <m:cn>0</m:cn>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:cn>0</m:cn>
+		    <m:cn>0</m:cn>
+		    <m:cn>1</m:cn>
+		    <m:cn>1</m:cn>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:cn>0</m:cn>
+		    <m:cn>0</m:cn>
+		    <m:cn>1</m:cn>
+		    <m:cn>-1</m:cn>
+		  </m:matrixrow>
+		</m:matrix>
+	      </m:apply>
+
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:matrix>
+		  <m:matrixrow>
+		    <m:cn>1</m:cn>
+		    <m:cn>1</m:cn>
+		    <m:cn>1</m:cn>
+		    <m:cn>1</m:cn>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:cn>1</m:cn>
+		    <m:cn>1</m:cn>
+		    <m:cn>-1</m:cn>
+		    <m:cn>-1</m:cn>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		    <m:apply>
+		      <m:minus/>
+		      <m:apply>
+			<m:root/>
+			<m:cn>2</m:cn>
+		      </m:apply>
+		    </m:apply>
+		    <m:cn>0</m:cn>
+		    <m:cn>0</m:cn>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:cn>0</m:cn>
+		    <m:cn>0</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		    <m:apply>
+		      <m:minus/>
+		      <m:apply>
+			<m:root/>
+			<m:cn>2</m:cn>
+		      </m:apply>
+		    </m:apply>
+		  </m:matrixrow>
+		</m:matrix>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	where 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:apply>
+	      <m:divide/>
+	      <m:cn>1</m:cn>
+	      <m:apply>
+		<m:root/>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	    </m:apply>
+	    <m:matrix>
+	      <m:matrixrow>
+		<m:cn>1</m:cn>
+		<m:cn>0</m:cn>
+		<m:cn>1</m:cn>
+		<m:cn>0</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>1</m:cn>
+		<m:cn>0</m:cn>
+		<m:cn>-1</m:cn>
+		<m:cn>0</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>0</m:cn>
+		<m:apply>
+		  <m:root/>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:cn>0</m:cn>
+		<m:cn>0</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>0</m:cn>
+		<m:cn>0</m:cn>
+		<m:cn>0</m:cn>
+		<m:apply>
+		  <m:root/>
+		  <m:cn>2</m:cn>
+		</m:apply>
+	      </m:matrixrow>
+	    </m:matrix>
+	  </m:apply>
+	</m:math> is Haar level 2 and 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:apply>
+	      <m:divide/>
+	      <m:cn>1</m:cn>
+	      <m:apply>
+		<m:root/>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	    </m:apply>
+	    <m:matrix>
+	      <m:matrixrow>
+		<m:cn>1</m:cn>
+		<m:cn>1</m:cn>
+		<m:cn>0</m:cn>
+		<m:cn>0</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>1</m:cn>
+		<m:cn>-1</m:cn>
+		<m:cn>0</m:cn>
+		<m:cn>0</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>0</m:cn>
+		<m:cn>0</m:cn>
+		<m:cn>1</m:cn>
+		<m:cn>1</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>0</m:cn>
+		<m:cn>0</m:cn>
+		<m:cn>1</m:cn>
+		<m:cn>-1</m:cn>
+	      </m:matrixrow>
+	    </m:matrix>
+	  </m:apply>
+	</m:math> is Haar level 1. Similarly 3 and 4 level Haar transforms may
+	be expressed using 8 and 16 point transform matrices respectively.
+      </para>
+
+      <para id="sec1para5">
+	However for 
+	<m:math>
+	  <m:apply>
+	    <m:gt/>
+	    <m:ci>n</m:ci>
+	    <m:cn>2</m:cn>
+	  </m:apply>
+	</m:math>, there are better matrices than those based on the Haar
+	transform, where <emphasis>better</emphasis> means <emphasis>with
+	  improved energy compression properties for typical images</emphasis>.
+      </para>
+
+      <para id="sec1para6">
+	Discrete Cosine Transforms (DCTs) have some of these improved
+	properties and are also simple to define and implement. The
+	<m:math><m:ci>n</m:ci></m:math> rows of an
+	<m:math><m:ci>n</m:ci></m:math>-point DCT matrix <m:math><m:ci type="matrix">T</m:ci></m:math> are defined by:
+
+	<m:math display="block">
+	  <m:apply>
+	    <m:forall/>
+	    <m:condition>
+	      <m:apply>
+		<m:eq/>
+		<m:ci>i</m:ci>
+		<m:apply>
+		  <m:tendsto/>
+		  <m:cn>1</m:cn>
+		  <m:ci>n</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:condition>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:selector/>
+		<m:ci type="matrix">t</m:ci>
+		<m:cn>1</m:cn>
+		<m:ci>i</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:root/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:ci>n</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+
+	<equation id="eq3">
+	  <m:math>
+	    <m:apply>
+	      <m:forall/>
+	      <m:condition>
+		<m:apply>
+		  <m:and/>
+		  <m:apply>
+		    <m:eq/>
+		    <m:ci>i</m:ci>
+		    <m:apply>
+		      <m:tendsto/>
+		      <m:cn>1</m:cn>
+		      <m:ci>n</m:ci>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:eq/>
+		    <m:ci>k</m:ci>
+		    <m:apply>
+		      <m:tendsto/>
+		      <m:cn>2</m:cn>
+		      <m:ci>n</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:condition>
+	      <m:apply>
+		<m:eq/>
+		<m:apply>
+		  <m:selector/>
+		  <m:ci type="matrix">t</m:ci>
+		  <m:ci>k</m:ci>
+		  <m:ci>i</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:root/>
+		    <m:apply>
+		      <m:divide/>
+		      <m:cn>2</m:cn>
+		      <m:ci>n</m:ci>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:cos/>
+		    <m:apply>
+		      <m:divide/>
+		      <m:apply>
+			<m:times/>
+			<m:pi/>
+			<m:apply>
+			  <m:minus/>
+			  <m:apply>
+			    <m:times/>
+			    <m:cn>2</m:cn>
+			    <m:ci>i</m:ci>
+			  </m:apply>
+			  <m:cn>1</m:cn>
+			</m:apply>
+			<m:apply>
+			  <m:minus/>
+			  <m:ci>k</m:ci>
+			  <m:cn>1</m:cn>
+			</m:apply>
+		      </m:apply>
+		      <m:apply>
+			<m:times/>
+			<m:cn>2</m:cn>
+			<m:ci>n</m:ci>
+		      </m:apply>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	It is straightforward to show that this matrix is orthonormal
+	for <m:math><m:ci>n</m:ci></m:math> even, since the norm of
+	each row is unity and the dot product of any pair of rows is
+	zero (the product terms may be expressed as the sum of a pair
+	of cosine functions, which are each zero mean).
+      </para>
+
+      <para id="sec1para7">
+	The 8-point DCT matrix (
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>n</m:ci>
+	    <m:cn>8</m:cn>
+	  </m:apply>
+	</m:math>) is:
+
+	<equation id="eq4">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci type="matrix">T</m:ci>
+	      <m:matrix>
+		<m:matrixrow>
+		  <m:cn>0.3536</m:cn>
+		  <m:cn>0.3536</m:cn>
+		  <m:cn>0.3536</m:cn>
+		  <m:cn>0.3536</m:cn>
+		  <m:cn>0.3536</m:cn>
+		  <m:cn>0.3536</m:cn>
+		  <m:cn>0.3536</m:cn>
+		  <m:cn>0.3536</m:cn>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:cn>0.4904</m:cn>
+		  <m:cn>0.4157</m:cn>
+		  <m:cn>0.2778</m:cn>
+		  <m:cn>0.0975</m:cn>
+		  <m:cn>-0.0975</m:cn>
+		  <m:cn>-0.2778</m:cn>
+		  <m:cn>-0.4157</m:cn>
+		  <m:cn>-0.4904</m:cn>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:cn>0.4619</m:cn>
+		  <m:cn>0.1913</m:cn>
+		  <m:cn>-0.1913</m:cn>
+		  <m:cn>-0.4619</m:cn>
+		  <m:cn>-0.4619</m:cn>
+		  <m:cn>-0.1913</m:cn>
+		  <m:cn>0.1913</m:cn>
+		  <m:cn>0.4619</m:cn>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:cn>0.4157</m:cn>
+		  <m:cn>-0.0975</m:cn>
+		  <m:cn>-0.4904</m:cn>
+		  <m:cn>-0.2778</m:cn>
+		  <m:cn>0.2778</m:cn>
+		  <m:cn>0.4904</m:cn>
+		  <m:cn>0.0975</m:cn>
+		  <m:cn>-0.4157</m:cn>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:cn>0.3536</m:cn>
+		  <m:cn>-0.3536</m:cn>
+		  <m:cn>-0.3536</m:cn>
+		  <m:cn>0.3536</m:cn>
+		  <m:cn>0.3536</m:cn>
+		  <m:cn>-0.3536</m:cn>
+		  <m:cn>-0.3536</m:cn>
+		  <m:cn>0.3536</m:cn>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:cn>0.2778</m:cn>
+		  <m:cn>-0.4904</m:cn>
+		  <m:cn>0.0975</m:cn>
+		  <m:cn>0.4157</m:cn>
+		  <m:cn>-0.4157</m:cn>
+		  <m:cn>-0.0975</m:cn>
+		  <m:cn>0.4904</m:cn>
+		  <m:cn>-0.2778</m:cn>
+		</m:matrixrow>
+		  <m:matrixrow>
+		    <m:cn>0.1913</m:cn>
+		    <m:cn>-0.4619</m:cn>
+		    <m:cn>0.4619</m:cn>
+		    <m:cn>-0.1913</m:cn>
+		    <m:cn>-0.1913</m:cn>
+		    <m:cn>0.4619</m:cn>
+		    <m:cn>-0.4619</m:cn>
+		    <m:cn>0.1913</m:cn>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:cn>0.0975</m:cn>
+		    <m:cn>-0.2778</m:cn>
+		    <m:cn>0.4157</m:cn>
+		    <m:cn>-0.4904</m:cn>
+		    <m:cn>0.4904</m:cn>
+		    <m:cn>-0.4157</m:cn>
+		    <m:cn>0.2778</m:cn>
+		    <m:cn>-0.0975</m:cn>
+		  </m:matrixrow>
+	      </m:matrix>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	The rows of <m:math><m:ci type="matrix">T</m:ci></m:math>,
+	known as basis function, are plotted as asterisks in <link target-id="figure1" strength="2"/>. The asterisks are
+	superimposed on the underlying continuous cosine functions,
+	used in all sizes of DCT. Only the amplitude scaling and the
+	maximum frequency vary with the size
+	<m:math><m:ci>n</m:ci></m:math>.
+      </para>
+
+      <figure id="figure1">
+	<media id="idm9550208" alt=""><image src="../../media/figure1-8bb0.png" mime-type="image/png"/></media>
+	<caption>The 8-point DCT basis functions(*) and their
+	underlying continuous cosine waves.
+	</caption>
+      </figure>
+
+      <para id="sec1para8">
+	When we take the transform of an
+	<m:math><m:ci>n</m:ci></m:math>-point vector using
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci type="vector">y</m:ci>
+	    <m:apply>
+	      <m:times/>
+	      <m:ci type="matrix">T</m:ci>
+	      <m:ci type="vector">x</m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:math>, <m:math><m:ci type="vector">x</m:ci></m:math> is
+	decomposed into a linear combination of the basis function
+	(rows) of <m:math><m:ci type="matrix">T</m:ci></m:math>, whose
+	coefficients are the samples of <m:math><m:ci type="vector">y</m:ci></m:math>, because 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci type="vector">x</m:ci>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:transpose/>
+		<m:ci type="matrix">T</m:ci>
+	      </m:apply>
+	      <m:ci type="vector">y</m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:math>. 
+      </para>
+
+      <para id="sec1para9">
+	The basis functions may also be viewed as the impulse
+	responses of FIR filters, being applied to the data
+	<m:math><m:ci type="vector">x</m:ci></m:math>.
+      </para>
+
+      <para id="sec1para10">
+	The DCT is closely related to the discrete Fourier transform
+	(DFT). It represents the result of applying the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>2</m:cn>
+	    <m:ci>n</m:ci>
+	  </m:apply>
+	</m:math>-point DFT
+	to a vector:
+
+	<m:math display="block">
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci type="vector">
+	      <m:msub><m:mi>x</m:mi>
+		<m:mrow>
+		  <m:mn>2</m:mn>
+		  <m:mo/>
+		  <m:mi>n</m:mi>
+		</m:mrow>
+	      </m:msub>
+	    </m:ci>
+	    <m:matrix>
+	      <m:matrixrow>
+		<m:ci type="vector">x</m:ci>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:ci type="vector">
+		  <m:msub><m:mi>x</m:mi><m:mi>rev</m:mi></m:msub>
+		</m:ci>
+	      </m:matrixrow>
+	    </m:matrix>
+	  </m:apply>
+	</m:math>
+
+	where 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci type="vector">
+	      <m:msub><m:mi>x</m:mi><m:mi>rev</m:mi></m:msub>
+	    </m:ci>
+	    <m:matrix>
+	      <m:matrixrow>
+		<m:apply>
+		  <m:ci type="fn">x</m:ci>
+		  <m:ci>n</m:ci>
+		</m:apply>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:ci>…</m:ci>
+	      </m:matrixrow>
+	       <m:matrixrow>
+		<m:apply>
+		  <m:ci type="fn">x</m:ci>
+		  <m:cn>1</m:cn>
+		</m:apply>
+	      </m:matrixrow>
+	    </m:matrix>
+	  </m:apply>
+	</m:math>. 
+	<m:math>
+	  <m:ci type="vector">
+	    <m:msub><m:mi>x</m:mi>
+	      <m:mrow>
+		<m:mn>2</m:mn>
+		<m:mo/>
+		<m:mi>n</m:mi>
+	      </m:mrow>
+	    </m:msub>
+	  </m:ci>
+	</m:math> is symmetric about its centre and so the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>2</m:cn>
+	    <m:ci>n</m:ci>
+	  </m:apply>
+	</m:math> Fourier coefficients are all purely real and
+	symmetric about zero frequency. The
+	<m:math><m:ci>n</m:ci></m:math> DCT coefficients are then the
+	first <m:math><m:ci>n</m:ci></m:math> Fourier coefficients.
+
+	<note type="note" id="idm3039728">The DFT must be defined with a half sample
+	period offset on the indexing of the input samples for the
+	above to be strictly true.</note>
+      </para>
+
+      <section id="sec1sec1">
+	<title>Standards</title>
+	<para id="sec1sec1para1">
+	  The 8-point DCT is the basis of the JPEG standard, as well
+	  as several other standards such as MPEG-1 and MPEG-2 (for TV
+	  and video) and H.263 (for video-phones). Hence we shall
+	  concentrate on it as our main example, but bear in mind that
+	  DCTs may be defined for a wide range of sizes
+	  <m:math><m:ci>n</m:ci></m:math>.
+	</para>
+      </section>
+
+    </section>
+
+  </content>
+</document>

@@ -1,0 +1,386 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>Quantisation of DCT Coefficients</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>1c4e3fb3-535e-452b-875b-5167158efe41</md:uuid>
+</metadata>
+
+  <content>
+    <para id="para1">
+      For our discussion of the <link document="m11094" strength="2">2-D DCT</link> we assumed a
+      quantiser step size of 15 to allow direct comparison of
+      entropies with the Haar transform. But what step size do we
+      really need?
+    </para>
+
+    <para id="para2">
+      <link target-id="figure9" strength="2"/>(a) and (b) show images
+      reconstructed from the 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> DCT of Lenna (see <link document="m11094" target-id="figure2" strength="2">subfigure (c)</link>), when all the
+      DCT coefficients are quantised with step sizes of 15 and 30
+      respectively. It is difficult to see quantising artefacts in
+      <link target-id="figure9" strength="2"/>(a) ( 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>
+	    <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	  </m:ci>
+	  <m:cn>15</m:cn>
+	</m:apply>
+      </m:math>) but they are quite noticeable in <link target-id="figure9" strength="2"/>(b) (
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>
+	    <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	  </m:ci>
+	  <m:cn>30</m:cn>
+	</m:apply>
+      </m:math>).
+    </para>
+
+    <para id="para3">
+      The visibility of the 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> DCT basis functions of <link document="m11094" target-id="figure2" strength="2">subfigure (a)</link> in our discussion of the 2-D DCT has been
+      measured (for a 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>720</m:cn>
+	  <m:cn>576</m:cn>
+	</m:apply>
+      </m:math> image viewed from 6 times the image width) and the
+      minimum quantiser steps have been determined which will give
+      artefacts just at the threshold of visibility. The matrices
+      (JPEG Book, p37) for the luminance and chrominance threshold
+      step sizes are:
+
+      <equation id="eq7">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>lum</m:mi></m:msub>
+	    </m:ci>
+	    <m:matrix>
+	      <m:matrixrow>
+		<m:cn>16</m:cn>
+		<m:cn>11</m:cn>
+		<m:cn>10</m:cn>
+		<m:cn>16</m:cn>
+		<m:cn>24</m:cn>
+		<m:cn>40</m:cn>
+		<m:cn>51</m:cn>
+		<m:cn>61</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>12</m:cn>
+		<m:cn>12</m:cn>
+		<m:cn>14</m:cn>
+		<m:cn>19</m:cn>
+		<m:cn>26</m:cn>
+		<m:cn>58</m:cn>
+		<m:cn>60</m:cn>
+		<m:cn>55</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>14</m:cn>
+		<m:cn>13</m:cn>
+		<m:cn>16</m:cn>
+		<m:cn>24</m:cn>
+		<m:cn>40</m:cn>
+		<m:cn>57</m:cn>
+		<m:cn>69</m:cn>
+		<m:cn>56</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>14</m:cn>
+		<m:cn>17</m:cn>
+		<m:cn>22</m:cn>
+		<m:cn>29</m:cn>
+		<m:cn>51</m:cn>
+		<m:cn>87</m:cn>
+		<m:cn>80</m:cn>
+		<m:cn>62</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>18</m:cn>
+		<m:cn>22</m:cn>
+		<m:cn>37</m:cn>
+		<m:cn>56</m:cn>
+		<m:cn>68</m:cn>
+		<m:cn>109</m:cn>
+		<m:cn>103</m:cn>
+		<m:cn>77</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>24</m:cn>
+		<m:cn>35</m:cn>
+		<m:cn>55</m:cn>
+		<m:cn>64</m:cn>
+		<m:cn>81</m:cn>
+		<m:cn>104</m:cn>
+		<m:cn>113</m:cn>
+		<m:cn>92</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>49</m:cn>
+		<m:cn>64</m:cn>
+		<m:cn>78</m:cn>
+		<m:cn>87</m:cn>
+		<m:cn>103</m:cn>
+		<m:cn>121</m:cn>
+		<m:cn>120</m:cn>
+		<m:cn>101</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>72</m:cn>
+		<m:cn>92</m:cn>
+		<m:cn>95</m:cn>
+		<m:cn>98</m:cn>
+		<m:cn>112</m:cn>
+		<m:cn>100</m:cn>
+		<m:cn>103</m:cn>
+		<m:cn>99</m:cn>
+	      </m:matrixrow>
+	    </m:matrix>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      <equation id="eq8">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>chr</m:mi></m:msub>
+	    </m:ci>
+	    <m:matrix>
+	      <m:matrixrow>
+		<m:cn>17</m:cn>
+		<m:cn>18</m:cn>
+		<m:cn>24</m:cn>
+		<m:cn>47</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+	      </m:matrixrow>
+	       <m:matrixrow>
+		<m:cn>18</m:cn>
+		<m:cn>21</m:cn>
+		<m:cn>26</m:cn>
+		<m:cn>66</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>24</m:cn>
+		<m:cn>26</m:cn>
+		<m:cn>56</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>47</m:cn>
+		<m:cn>66</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+		<m:cn>99</m:cn>
+	      </m:matrixrow>
+	    </m:matrix>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      <link target-id="figure9" strength="2"/>(c) shows the
+      reconstructed image when each of the <link document="m11094" target-id="figure2" strength="2">subimages of (c)</link>  is quantised
+      using the corresponding step size from 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>Q</m:mi><m:mi>lum</m:mi></m:msub>
+	</m:ci>
+      </m:math>. It is certainly difficult to detect any quantising
+      artefacts, even though many of the step sizes are greater than 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>
+	    <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	  </m:ci>
+	  <m:cn>30</m:cn>
+	</m:apply>
+      </m:math>, used in <link target-id="figure9" strength="2"/>(b). <link target-id="figure9" strength="2"/>(d) is
+      the reconstructed image using step sizes of 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>2</m:cn>
+	  <m:ci>
+	    <m:msub><m:mi>Q</m:mi><m:mi>lum</m:mi></m:msub>
+	  </m:ci>
+	</m:apply>
+      </m:math> and the artefacts are still quite low.
+    </para>
+
+    <figure id="figure9">
+      <media id="idp528176" alt=""><image src="figure9.png" mime-type="image/png"/></media>
+      <caption>
+	Images reconstructed using the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>8</m:cn>
+	    <m:cn>8</m:cn>
+	  </m:apply>
+	</m:math> DCT with (a) 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	    </m:ci>
+	    <m:cn>15</m:cn>
+	  </m:apply>
+	</m:math>, (b) 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	    </m:ci>
+	    <m:cn>30</m:cn>
+	  </m:apply>
+	</m:math>, (c) 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	    </m:ci>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>lum</m:mi></m:msub>
+	    </m:ci>
+	  </m:apply>
+	</m:math>, the JPEG luminance matrix, and (d) 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	    </m:ci>
+	    <m:apply>
+	      <m:times/>
+	      <m:cn>2</m:cn>
+	      <m:ci>
+		<m:msub><m:mi>Q</m:mi><m:mi>lum</m:mi></m:msub>
+	      </m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:math>.
+      </caption>
+    </figure>
+
+    <figure id="figure10">
+      <media id="idm9481440" alt=""><image src="../../media/figure10-e07e.png" mime-type="image/png"/></media>
+      <caption>
+	Plots of the entropies of the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>8</m:cn>
+	    <m:cn>8</m:cn>
+	  </m:apply>
+	</m:math> DCT quantised subimages for the four reconstructed
+	images of <link target-id="figure9" strength="2"/>.
+      </caption>
+    </figure>
+
+    <para id="para4">
+      <link target-id="figure10" strength="2"/> shows the entropies of
+      the 64 quantised subimages used to reconstruct each of the four
+      images in <link target-id="figure9" strength="2"/>. Also given on
+      each plot is the mean entropy (giving the bits/pel for the
+      image) and the rms quantising error between the quantised image
+      and the original.
+    </para>
+    
+    <para id="para5">
+      We see that <link target-id="figure9" strength="2"/>(c) has about
+      the same mean entropy and rms error as <link target-id="figure9" strength="2"/>(b), but that its quantising artefacts are much
+      less visible. <link target-id="figure9" strength="2"/>(d) has
+      similar visibility of artefacts to <link target-id="figure9" strength="2"/>(b), but has significantly lower entropy and
+      hence <emphasis>greater compression</emphasis> (similarly for
+      <link target-id="figure9" strength="2"/>(c) versus <link target-id="figure9" strength="2"/>(a)).
+    </para>
+
+    <para id="para6">
+      This shows the distinct advantages of <emphasis>subjectively
+      weighted quantisation</emphasis>, and also that it is unwise to
+      rely too much on the rms error as a measure of image quality.
+    </para>
+
+  </content>
+  
+</document>

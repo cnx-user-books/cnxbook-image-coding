@@ -1,0 +1,124 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>Motion-Compensated Predictive Coding</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>83f2ff2d-d977-4ec3-b0ba-759711c88575</md:uuid>
+</metadata>
+  
+  
+  <content>
+    <para id="para1">
+      Video compression is concerned with coding image sequences at
+      low bit rates.  In an image sequence, there are typically high
+      correlations between consecutive frames of the sequence, in
+      addition to the spatial correlations which exist naturally
+      within each frame.
+    </para>
+
+    <para id="para2">
+      Video coders aim to take maximum advantage of
+      <emphasis>interframe</emphasis> temporal correlations (between
+      frames) as well as <emphasis>intraframe</emphasis> spatial
+      correlations (within frames).
+    </para>
+    
+    <section id="sec1">
+      <title>Motion-Compensated Predictive Coding</title>
+      
+      <para id="sec1para1">
+	<term>Motion-compensated predictive coding</term> (MCPC) is
+	the technique that has been found to be most successful for
+	exploiting interframe correlations.
+      </para>
+      
+      <para id="sec1para2">
+	<link target-id="figure1" strength="2"/> shows the basic block
+	diagram of a MCPC video encoder.
+      </para>
+      
+      <figure id="figure1">
+	<media id="idp721424" alt=""><image src="../../media/figure1-b1a7.png" mime-type="image/png"/></media>
+	<caption>
+	  Motion compensated prediction coding (MCPC) video encoder.
+	</caption>
+      </figure>
+      
+      <para id="sec1para3">
+	The transform, quantise, and entropy encode functions are
+	basically the same as those employed for still image coding.
+	The first frame in a sequence is coded in the normal way for a
+	still image by switching the prediction frame to zero.
+      </para>
+      
+      <para id="sec1para4">
+	For subsequent frames, the input to the transform stage is the
+	difference between the <emphasis>input</emphasis> frame and
+	the <emphasis>prediction</emphasis> frame, based on the
+	previous decoded frame.  This difference frame is usually
+	known as the <term>prediction error frame</term>.
+      </para>
+      
+      <para id="sec1para5">
+	The purpose of employing predictions is to reduce the energy
+	of the prediction error frames so that they have lower entropy
+	after transformation and can therefore be coded with a lower
+	bit rate.
+      </para>
+      
+      <para id="sec1para6">
+	If there is motion in the sequence, the prediction error
+	energy may be significantly reduced by <term>motion
+	compensation</term>.  This allows regions in the prediction
+	frame to be generated from <emphasis>shifted</emphasis>
+	regions from the previous decoded frame.  Each shift is
+	defined by a <term>motion vector</term> which is transmitted
+	to the decoder in addition to the coded transform
+	coefficients.  The motion vectors are usually entropy coded to
+	minimise the extra bit rate needed to do this.
+      </para>
+
+      <para id="sec1para7">
+	The multiplexer combines the various types of coded
+	information into a single serial bit stream, and the buffer
+	smoothes out the fluctuations in bit rate caused by varying
+	motion in the sequence and by scene changes.  The controller
+	adjusts coding parameters (such as the quantiser step size) in
+	order to maintain the buffer at approximately half-full, and
+	hence it keeps the mean bit rate of the encoder equal to that
+	of the channel.
+      </para>
+      
+      <para id="sec1para8">
+	Decoded frames are produced in the encoder, which are
+	identical to those generated in the decoder.  The decoder
+	comprises a buffer, de-multiplexer, and entropy decoder to
+	invert the operations of the equivalent encoder blocks, and
+	then the decoded frames are produced by the part of the
+	encoder loop comprising the inverse quantiser, inverse
+	transform, adder, frame store, motion compensator and switch.
+      </para>
+      
+      <para id="sec1para9">
+	H.261 is a CCITT standard for video encoding for video-phone
+	and video conferencing applications.  Video is much more
+	important in a multi-speaker conferencing environment than in
+	simple one-to-one conversations.  H.261 employs coders of the
+	form shown in <link target-id="figure1" strength="2"/> to achieve
+	reasonable quality head-and-shoulder images at rates down to
+	64 kb/s (one ISDN channel).  A demonstration of H.261 coding
+	at 64 and 32 kb/s will be shown.
+      </para>
+      
+      <para id="sec1para10">
+	A development of this, H.263, is now in current use, to allow
+	the bit rate to be reduced down to about 20 kb/s, without too
+	much loss of quality, for modems and mobile channels.  This
+	uses some of the more advanced motion methods from MPEG <!--
+	cnxn?-->(see later), and it also forms the basis for baseline
+	MPEG-4 coders.
+      </para>
+
+    </section>
+  </content>
+  
+</document>

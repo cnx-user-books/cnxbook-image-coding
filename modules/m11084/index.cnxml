@@ -1,0 +1,490 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>Human Vision</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>08433a7b-1165-4c30-bab0-00bb32fade48</md:uuid>
+</metadata>
+  
+  <content>
+    <section id="sec1">
+      <title>Colours</title>
+      
+      <para id="sec1para1">
+	The human vision system perceives images in colour using
+	receptors on the retina of the eye which respond to three
+	relatively broad colour bands in the regions of red, green and
+	blue (RGB) in the colour spectrum (red, orange, yellow, green,
+	blue, indigo, violet).
+      </para>
+
+      <para id="sec1para2">
+	Colours in between these are perceived as different linear
+	combinations of RGB. Hence colour TVs and monitors can form
+	almost any perceivable colour by controlling the relative
+	intensities of R, G and B light sources. Thus most colour
+	images which exist in electronic form are fundamentally
+	represented by 3 intensities (R, G and B) at each picture
+	element (pel) position.
+      </para>
+
+      <para id="sec1para3">
+	The numerical values used for these intensities are usually
+	chosen such that equal increments in value result in
+	approximately equal apparent increases in brightness. In
+	practise this means that the numerical value is approximately
+	proportional to the log of the true light intensity (energy of
+	the wave) - this is <term>Weber's Law</term>. Throughout this course, we
+	shall refer to these numerical values as intensities, since
+	for compression it is most convenient to use a subjectively
+	linear scale.
+      </para>
+    </section>
+
+    <section id="sec2">
+      <title>The YUV Colour Space</title>
+      
+      <para id="sec2para1">
+	The eye is much more sensitive to overall intensity
+	(luminance) changes than to colour changes. Usually most of the
+	information about a scene is contained in its luminance rather
+	than its colour (chrominance).
+      </para>
+
+      <para id="sec2para2">
+	This is why black-and-white (monochrome) reproduction was
+	acceptable for photography and TV for many years until
+	technology provided colour reproduction at a sufficient cheap
+	price to make its modest advantages worth having.
+      </para>
+
+      <para id="sec2para3">
+	The luminance (<m:math><m:ci>Y</m:ci></m:math>) of a pel may
+	be obtained from its RGB components as:
+
+	<equation id="eq1">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci>Y</m:ci>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:times/>
+		  <m:cn>0.3</m:cn>
+		  <m:ci>R</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:cn>0.6</m:cn>
+		  <m:ci>G</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:cn>0.1</m:cn>
+		  <m:ci>B</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	These coefficients are only approximate, and are the values
+	defined in the JPEG Book. In other places values of
+	<m:math><m:cn>0.3</m:cn></m:math>,
+	<m:math><m:cn>0.59</m:cn></m:math> and
+	<m:math><m:cn>0.11</m:cn></m:math> are used.
+      </para>
+
+      <para id="sec2para4">
+	RGB representations of images are normally defined so that if 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>R</m:ci>
+	    <m:ci>G</m:ci>
+	    <m:ci>B</m:ci>
+	  </m:apply>
+	</m:math>, the pel is always some shade of gray, and if 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>Y</m:ci>
+	    <m:ci>R</m:ci>
+	    <m:ci>G</m:ci>
+	    <m:ci>B</m:ci>
+	  </m:apply>
+	</m:math> in these cases, the 3 coefficients in <link target-id="eq1" strength="2"/> should sum to unity.
+      </para>
+
+      <para id="sec2para5">
+	When <m:math><m:ci>Y</m:ci></m:math> defines the luminance of
+	a pel, its chrominance is usually defined by
+	<m:math><m:ci>U</m:ci></m:math> and
+	<m:math><m:ci>V</m:ci></m:math> such that:
+
+	<m:math display="block">
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>U</m:ci>
+	    <m:apply>
+	      <m:times/>
+	      <m:cn>0.5</m:cn>
+	      <m:apply>
+		<m:minus/>
+		<m:ci>B</m:ci>
+		<m:ci>Y</m:ci>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+	
+	<equation id="eq2">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci>V</m:ci>
+	      <m:apply>
+		<m:times/>
+		<m:cn>0.625</m:cn>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>R</m:ci>
+		  <m:ci>Y</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	Note that gray pels will always have 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>U</m:ci>
+	    <m:ci>V</m:ci>
+	    <m:cn>0</m:cn>
+	  </m:apply>
+	</m:math>.
+      </para>
+
+      <para id="sec2para6">
+	The transformation between RGB and YUV colour spaces is linear
+	and may be achieved by a 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>3</m:cn>
+	    <m:cn>3</m:cn>
+	  </m:apply>
+	</m:math> matrix <m:math><m:ci type="matrix">C</m:ci></m:math>
+	and its inverse:
+
+	<equation id="eq3">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:matrix>
+		<m:matrixrow>
+		  <m:ci>Y</m:ci>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:ci>U</m:ci>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:ci>V</m:ci>
+		</m:matrixrow>
+	      </m:matrix>
+	      <m:apply>
+		<m:times/>
+		<m:ci type="matrix">C</m:ci>
+		<m:matrix>
+		  <m:matrixrow>
+		    <m:ci>R</m:ci>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:ci>G</m:ci>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:ci>B</m:ci>
+		  </m:matrixrow>
+		</m:matrix>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+	
+	where 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci type="matrix">C</m:ci>
+	    <m:matrix>
+	      <m:matrixrow>
+		<m:cn>0.3</m:cn>
+		<m:cn>0.6</m:cn>
+		<m:cn>0.1</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>-0.15</m:cn>
+		<m:cn>-0.3</m:cn>
+		<m:cn>0.45</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>0.4375</m:cn>
+		<m:cn>-0.3750</m:cn>
+		<m:cn>-0.0625</m:cn>
+	      </m:matrixrow>
+	    </m:matrix>
+	  </m:apply>
+	</m:math> and 
+
+	<equation id="eq4">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:matrix>
+		<m:matrixrow>
+		  <m:ci>R</m:ci>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:ci>G</m:ci>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:ci>B</m:ci>
+		</m:matrixrow>
+	      </m:matrix>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:inverse/>
+		  <m:ci type="matrix">C</m:ci>
+		</m:apply>
+		<m:matrix>
+		  <m:matrixrow>
+		    <m:ci>Y</m:ci>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:ci>U</m:ci>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:ci>V</m:ci>
+		  </m:matrixrow>
+		</m:matrix>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	where 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:inverse/>
+	      <m:ci type="matrix">C</m:ci>
+	    </m:apply>
+	    <m:matrix>
+	      <m:matrixrow>
+		<m:cn>1</m:cn>
+		<m:cn>0</m:cn>
+		<m:cn>1.6</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>1</m:cn>
+		<m:cn>-0.3333</m:cn>
+		<m:cn>-0.8</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>1</m:cn>
+		<m:cn>2</m:cn>
+		<m:cn>0</m:cn>
+	      </m:matrixrow>
+	    </m:matrix>
+	  </m:apply>
+	</m:math>
+      </para>
+    </section>
+
+    
+    <section id="sec3">
+      <title>Visual Sensitivity</title>
+      
+      <figure id="figure1">
+	<media id="idm10588352" alt=""><image src="../../media/figure1-02b1.png" mime-type="image/png"/></media>
+	<caption>
+	  Sensitivity of the eye to luminance and chrominance
+	  intensity changes.
+	</caption>
+      </figure>
+      
+      <para id="sec3para1">
+	<link target-id="figure1" strength="2"/> shows the sensitivity of
+	the eye to luminance (<m:math><m:ci>Y</m:ci></m:math>) and
+	chrominance (<m:math><m:ci>U</m:ci></m:math>,
+	<m:math><m:ci>V</m:ci></m:math>) components of images. The
+	horizontal scale is spatial frequency, and represents the
+	frequency of an alternating pattern of parallel stripes with
+	sinusoidally varying intensity. The vertical scale is the
+	contrast sensitivity of human vision, which is the ratio of
+	the maximum visible range of intensities to the minimum
+	discernible peak-to-peak intensity variation at the specified
+	frequency.
+      </para>
+
+      <para id="sec3para2">
+	In <link target-id="figure1" strength="2"/> we see that: 
+
+	<list id="list1">
+	  <item>
+	    the maximum sensitivity to <m:math><m:ci>Y</m:ci></m:math>
+	    occurs for spatial frequencies around 5 cycles / degree,
+	    which corresponds to striped patterns with a half-period
+	    (stripe width) of 1.8 mm at a distance of 1 m (~arm's
+	    length).
+	  </item>
+	  <item>
+	    The eye has very little response above 100 cycles /
+	    degree, which corresponds to a stripe width of 0.1 mm at 1
+	    m. On a standard PC display of width 250 mm, this would
+	    require 2500 pels per line! Hence the current SVGA
+	    standard of 
+	    <m:math>
+	      <m:apply>
+		<m:times/>
+		<m:cn>1024</m:cn>
+		<m:cn>768</m:cn>
+	      </m:apply>
+	    </m:math> pels still falls somewhat short of the ideal and
+	    is limited by CRT spot size. Modern laptop displays have a
+	    pel size of about 0.3 mm, but are pleasing to view because
+	    the pel edges are so sharp (and there is no flicker).
+	  </item>
+
+	  <item>
+	    The sensitivity to luminance drops off at low spatial
+	    frequencies, showing that we are not very good at
+	    estimating absolute luminance levels <emphasis>as long as
+	    they do not change with time</emphasis> - the luminance
+	    sensitivity to temporal fluctuations (flicker) does not
+	    fall off at low spatial frequencies.
+	  </item>
+
+	  <item>
+	    The maximum chrominance sensitivity is much lower than the
+	    maximum luminance sensitivity with blue-yellow
+	    (<m:math><m:ci>U</m:ci></m:math>) sensitivity being about
+	    half of red-green (<m:math><m:ci>V</m:ci></m:math>)
+	    sensitivity and about 
+	    <m:math>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:cn>6</m:cn>
+	      </m:apply>
+	    </m:math> of the maximum luminance sensitivity.
+	  </item>
+
+	  <item>
+	    The chrominance sensitivities fall off above 1 cycle /
+	    degree, requiring a much lower spatial bandwidth than
+	    luminance. 
+	  </item>
+	</list>
+
+	We can now see why it is better to convert to the YUV domain
+	before attempting image compression. The
+	<m:math><m:ci>U</m:ci></m:math> and
+	<m:math><m:ci>V</m:ci></m:math> components may be sampled at a
+	lower rate than <m:math><m:ci>Y</m:ci></m:math> (due to
+	narrower bandwidth) and may be quantised more coarsely (due to
+	lower contrast sensitivity).
+      </para>
+
+      <para id="sec3para3">
+	A colour demonstration on the computer will show this effect.
+      </para>
+    </section>
+
+    <section id="sec4">
+      <title>Colour compression Strategy</title>
+      
+      <para id="sec4para1">
+	The 3 RGB samples at each pel are transformed into 3 YUV
+	samples using <link target-id="eq3" strength="2"/>.
+      </para>
+	
+      <para id="sec4para2">
+	Most image compression systems then subsample the
+	<m:math><m:ci>U</m:ci></m:math> and
+	<m:math><m:ci>V</m:ci></m:math> information by 2:1
+	horizontally and vertically so that there is one
+	<m:math><m:ci>U</m:ci></m:math> and one
+	<m:math><m:ci>V</m:ci></m:math> pel for each 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>2</m:cn>
+	    <m:cn>2</m:cn>
+	  </m:apply>
+	</m:math> block of <m:math><m:ci>Y</m:ci></m:math> pels. The
+	subsampled <m:math><m:ci>U</m:ci></m:math> and
+	<m:math><m:ci>V</m:ci></m:math> pels are obtained by averaging
+	the four <m:math><m:ci>U</m:ci></m:math> and
+	<m:math><m:ci>V</m:ci></m:math> samples, from <link target-id="eq3" strength="2"/>. The quarter-size
+	<m:math><m:ci>U</m:ci></m:math> and 
+	<m:math><m:ci>V</m:ci></m:math> subimages are then compressed
+	using the same techniques as the full-size
+	<m:math><m:ci>Y</m:ci></m:math> image, except that coarser
+	quantisation may be used for <m:math><m:ci>U</m:ci></m:math> and 
+	<m:math><m:ci>V</m:ci></m:math>, so the total cost of adding
+	colour may only be about 25% increase in bit rate. Sometimes
+	<m:math><m:ci>U</m:ci></m:math> and  
+	<m:math><m:ci>V</m:ci></m:math> are subsamples 4:1 each way
+	(16:1 total), giving an even lower cost of colour.
+      </para>
+
+      <para id="sec4para3">
+	From now on we will mostly be considering compression of the
+	monochrome <m:math><m:ci>Y</m:ci></m:math> image, and assume
+	that similar techniques will be used for the smaller
+	<m:math><m:ci>U</m:ci></m:math> and   
+	<m:math><m:ci>V</m:ci></m:math> subimages.
+      </para>
+    </section>
+
+    
+    <section id="sec5">
+      <title>Activity Masking</title>
+
+      <para id="sec5para1">
+	A final feature of human vision, which is useful for
+	compression, is that the contrast sensitivity to a given
+	pattern is reduced in the presence of other patterns
+	(activity) in the same region. This is known as activity
+	masking.
+      </para>
+
+      <para id="sec5para2">
+	It is a complicated subject as it depends on the similarity
+	between the given pattern and the background activity. However
+	in general, the higher the variance of the pels in a given
+	region (typically ~ 8 to 16 pels across), the lower is the
+	contrast sensitivity.
+      </para>
+
+      <para id="sec5para3">
+	Hence compression schemes which adapt the quantisation to
+	local image activity tend to perform better than those which
+	use uniform quantisation.
+      </para>
+
+      <para id="sec5para4">
+	A computer demonstration will show the effect of reduced
+	sensitivity to quantisation effects when noise is added to an
+	image. 
+      </para>
+    </section>
+
+  </content>
+  
+</document>

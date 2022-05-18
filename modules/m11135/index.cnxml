@@ -1,0 +1,1309 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>The 2-band Filter Bank</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>b53009a9-9bd2-4dfb-83f2-bf3a6872f97d</md:uuid>
+</metadata>
+  
+  <content>
+    <para id="para1">
+      Digital filter banks have been actively studied since the 1960s,
+      whereas Wavelet theory is a new subject area that was developed
+      in the 1980s, principally by French and Belgian mathematicians,
+      notably Y. Meyer, I. Daubechies, and S. Mallat. The two topics are
+      now firmly linked and of great importance for signal analysis
+      and compression.
+    </para>
+
+    <section id="sec1">
+      <title>The 2-band Filter Bank</title>
+      <para id="sec1para1">
+	Recall the 1-D Haar transform from our <link document="m11087" strength="2">previous discussion</link>.
+
+	<equation id="eq1">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:matrix>
+		<m:matrixrow>
+		  <m:apply>
+		    <m:ci type="fn">y</m:ci>
+		    <m:cn>1</m:cn>
+		  </m:apply>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:apply>
+		    <m:ci type="fn">y</m:ci>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:matrixrow>
+	      </m:matrix>
+	      <m:apply>
+		<m:times/>
+		<m:ci type="matrix">T</m:ci>
+		<m:matrix>
+		  <m:matrixrow>
+		    <m:apply>
+		      <m:ci type="fn">x</m:ci>
+		      <m:cn>1</m:cn>
+		    </m:apply>
+		  </m:matrixrow>
+		  <m:matrixrow>
+		    <m:apply>
+		      <m:ci type="fn">x</m:ci>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:matrixrow>
+		</m:matrix>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	where 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci type="matrix">T</m:ci>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:apply>
+		  <m:root/>
+		  <m:cn>2</m:cn>
+		</m:apply>
+	      </m:apply>
+	      <m:matrix>
+		<m:matrixrow>
+		  <m:cn>1</m:cn>
+		  <m:cn>1</m:cn>
+		</m:matrixrow>
+		<m:matrixrow>
+		  <m:cn>1</m:cn>
+		  <m:cn>-1</m:cn>
+		</m:matrixrow>
+	      </m:matrix>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </para>
+
+      <para id="para2">
+	We can write this in expanded form as: 
+
+	<equation id="eq2a">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">y</m:ci>
+		<m:cn>1</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">x</m:ci>
+		    <m:cn>1</m:cn>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">x</m:ci>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	<equation id="eq2b">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">y</m:ci>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:minus/>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">x</m:ci>
+		    <m:cn>1</m:cn>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">x</m:ci>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+	
+	More generally if <m:math><m:ci>x</m:ci></m:math> is a longer
+	sequence and the results are placed in two separate sequences 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math> and 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub>
+	  </m:ci>
+	</m:math>, we define the process as:
+
+	<equation id="eq3a">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:ci>n</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">x</m:ci>
+		    <m:apply>
+		      <m:minus/>
+		      <m:ci>n</m:ci>
+		      <m:cn>1</m:cn>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">x</m:ci>
+		    <m:ci>n</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	<equation id="eq3b">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub>
+		</m:ci>
+		<m:ci>n</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:minus/>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">x</m:ci>
+		    <m:apply>
+		      <m:minus/>
+		      <m:ci>n</m:ci>
+		      <m:cn>1</m:cn>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">x</m:ci>
+		    <m:ci>n</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	These can be expressed as 2 FIR filters with tap vectors 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci type="vector">
+	      <m:msub><m:mi>h</m:mi><m:mn>0</m:mn></m:msub>
+	    </m:ci>
+	    <m:matrix>
+	      <m:matrixrow>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:root/>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:root/>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:apply>
+	      </m:matrixrow>
+	    </m:matrix>
+	  </m:apply>
+	</m:math> and 
+	
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci type="vector">
+	      <m:msub><m:mi>h</m:mi><m:mn>1</m:mn></m:msub>
+	    </m:ci>
+	    <m:matrix>
+	      <m:matrixrow>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:root/>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>-1</m:cn>
+		  <m:apply>
+		    <m:root/>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:apply>
+	      </m:matrixrow>
+	    </m:matrix>
+	  </m:apply>
+	</m:math>. Hence as z-transforms, <link target-id="eq3a" strength="2"/> and <link target-id="eq3b" strength="2"/> become:
+	
+	<equation id="eq4a">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">X</m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation> 
+
+	where 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:apply>
+		  <m:root/>
+		  <m:cn>2</m:cn>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:inverse/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:cn>1</m:cn>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+
+	<equation id="eq4b">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>Y</m:mi><m:mn>1</m:mn></m:msub>
+		</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">X</m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation> 
+
+	where 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:apply>
+		  <m:root/>
+		  <m:cn>2</m:cn>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:minus/>
+		<m:apply>
+		  <m:inverse/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:cn>1</m:cn>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>. 
+	(We shall later extend these filters to be more complicated.)
+      </para>
+
+      <para id="para3">
+	In practice, we only calculate 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub>
+	    </m:ci>
+	    <m:ci>n</m:ci>
+	  </m:apply>
+	</m:math> and 
+	
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub>
+	    </m:ci>
+	    <m:ci>n</m:ci>
+	  </m:apply>
+	</m:math> at alternate (say even) values of
+	<m:math><m:ci>n</m:ci></m:math> so that the total number of
+	samples in 
+	
+	<m:math>
+	  <m:ci type="vector">
+	    <m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math> and 
+	
+	<m:math>
+	  <m:ci type="vector">
+	    <m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub>
+	  </m:ci>
+	</m:math> is the same as in <m:math><m:ci type="vector">x</m:ci></m:math>.
+      </para>
+
+      <para id="para4">
+	We may thus represent the Haar transform operation by a pair
+	of filters followed by downsampling by 2, as shown in <link target-id="figure1" strength="2"/>(a). This is known as a 2-band
+	analysis filter bank. 
+      </para>
+
+      <figure id="figure1">
+	<media id="idm9337648" alt=""><image src="../../media/figure1-cd5c.png" mime-type="image/png"/></media>
+	<caption>
+	  Two-band filter banks for analysis (a) and reconstruction
+	  (b). 
+	</caption>
+      </figure>
+
+      <para id="para5">
+	In <link document="m11087" target-id="eq3" strength="2">this
+	equation</link> in our discussion of the Haar transform, to
+	reconstruct <m:math><m:ci type="vector">x</m:ci></m:math> from
+	<m:math><m:ci type="vector">y</m:ci></m:math> we calculated
+	
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci type="vector">x</m:ci>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:transpose/>
+		<m:ci type="matrix">T</m:ci>
+	      </m:apply>
+	      <m:ci type="vector">y</m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:math>. For long sequences this may be written:
+	
+	<equation id="eq5a">
+	  <m:math>
+	    <m:apply>
+	      <m:forall/>
+	      <m:bvar><m:ci>n</m:ci></m:bvar>
+	      <m:condition>
+		<m:apply>
+		  <m:eq/>
+		  <m:ci>n</m:ci>
+		  <m:ci>even</m:ci>
+		</m:apply>
+	      </m:condition>
+	      <m:apply>
+		<m:eq/>
+		<m:apply>
+		  <m:ci type="fn">x</m:ci>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>n</m:ci>
+		    <m:cn>1</m:cn>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:apply>
+		    <m:times/>
+		    <m:apply>	
+		      <m:divide/>
+		      <m:cn>1</m:cn>
+		      <m:apply>
+			<m:root/>
+			<m:cn>2</m:cn>
+		      </m:apply>
+		    </m:apply>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub>
+		      </m:ci>
+		      <m:ci>n</m:ci>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:times/>
+		    <m:apply>	
+		      <m:divide/>
+		      <m:cn>1</m:cn>
+		      <m:apply>
+			<m:root/>
+			<m:cn>2</m:cn>
+		      </m:apply>
+		    </m:apply>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub>
+		      </m:ci>
+		      <m:ci>n</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	<equation id="eq5b">
+	  <m:math>
+	    <m:apply>
+	      <m:forall/>
+	      <m:bvar><m:ci>n</m:ci></m:bvar>
+	      <m:condition>
+		<m:apply>
+		  <m:eq/>
+		  <m:ci>n</m:ci>
+		  <m:ci>even</m:ci>
+		</m:apply>
+	      </m:condition>
+	      <m:apply>
+		<m:eq/>
+		<m:apply>
+		  <m:ci type="fn">x</m:ci>
+		  <m:ci>n</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:minus/>
+		  <m:apply>
+		    <m:times/>
+		    <m:apply>	
+		      <m:divide/>
+		      <m:cn>1</m:cn>
+		      <m:apply>
+			<m:root/>
+			<m:cn>2</m:cn>
+		      </m:apply>
+		    </m:apply>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub>
+		      </m:ci>
+		      <m:ci>n</m:ci>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:times/>
+		    <m:apply>	
+		      <m:divide/>
+		      <m:cn>1</m:cn>
+		      <m:apply>
+			<m:root/>
+			<m:cn>2</m:cn>
+		      </m:apply>
+		    </m:apply>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub>
+		      </m:ci>
+		      <m:ci>n</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	Since 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub>
+	    </m:ci>
+	    <m:ci>n</m:ci>
+	  </m:apply>
+	</m:math> and 
+	
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub>
+	    </m:ci>
+	    <m:ci>n</m:ci>
+	  </m:apply>
+	</m:math> are only calculated at even values of
+	<m:math><m:ci>n</m:ci></m:math>, we may assume that they are
+	zero at odd values of <m:math><m:ci>n</m:ci></m:math>. We may
+	then combine <link target-id="eq5a" strength="2"/> and <link target-id="eq5b" strength="2"/> into a single expression for  
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">x</m:ci>
+	    <m:ci>n</m:ci>
+	  </m:apply>
+	</m:math>, valid for all <m:math><m:ci>n</m:ci></m:math>:
+	
+	<equation id="eq6">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">x</m:ci>
+		<m:ci>n</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>	
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:plus/>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub>
+		      </m:ci>
+		      <m:apply>
+			<m:plus/>
+			<m:ci>n</m:ci>
+			<m:cn>1</m:cn>
+		      </m:apply>
+		    </m:apply>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub>
+		      </m:ci>
+		      <m:ci>n</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>	
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:minus/>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub>
+		      </m:ci>
+		      <m:apply>
+			<m:plus/>
+			<m:ci>n</m:ci>
+			<m:cn>1</m:cn>
+		      </m:apply>
+		    </m:apply>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub>
+		      </m:ci>
+		      <m:ci>n</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	or as z-transforms:
+
+	<equation id="eq7">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">X</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		    </m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub>
+		    </m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>	
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		    </m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>Y</m:mi><m:mn>1</m:mn></m:msub>
+		    </m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>	
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math> 
+	</equation>
+	
+	where 
+	<equation id="eq8">
+	  <m:math>
+	    <m:apply>
+	      <m:and/>
+	      <m:apply>
+		<m:eq/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>	
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:plus/>
+		    <m:ci>z</m:ci>
+		    <m:cn>1</m:cn>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:eq/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>	
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:root/>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		    <m:cn>1</m:cn>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+	
+	In <link target-id="eq7" strength="2"/> the signals 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub>
+	    </m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math> and 
+	
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>Y</m:mi><m:mn>1</m:mn></m:msub>
+	    </m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math> are not really the same as 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub>
+	    </m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math> and 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>Y</m:mi><m:mn>1</m:mn></m:msub>
+	    </m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math> in <link target-id="eq4a" strength="2"/> and <link target-id="eq4b" strength="2"/> because those in <link target-id="eq4a" strength="2"/> and <link target-id="eq4b" strength="2"/> have not had alternate samples set to
+	zero. Also, in <link target-id="eq7" strength="2"/>  
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">X</m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math> is the reconstructed output whereas in <link target-id="eq4a" strength="2"/> and <link target-id="eq4b" strength="2"/> it is the input signal. 
+      </para>
+      
+      <para id="para6">
+	To avoid confusion we shall use 
+	<m:math>
+	  <m:ci>
+	    <m:mover accent="true">
+	      <m:mi>X</m:mi>
+	      <m:mo>^</m:mo>
+	    </m:mover>
+	  </m:ci>
+	</m:math>, 
+	
+	<m:math>
+	  <m:ci>
+	    <m:mover accent="true">
+	      <m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub>
+	      <m:mo>^</m:mo>
+	    </m:mover>
+	  </m:ci>
+	</m:math> and 
+	
+	<m:math>
+	  <m:ci>
+	    <m:mover accent="true">
+	      <m:msub><m:mi>Y</m:mi><m:mn>1</m:mn></m:msub>
+	      <m:mo>^</m:mo>
+	    </m:mover>
+	  </m:ci>
+	</m:math> for the signals in <link target-id="eq7" strength="2"/>
+	so it becomes: 
+
+	<equation id="eq9">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:mover accent="true">
+		    <m:mi>X</m:mi>
+		    <m:mo>^</m:mo>
+		  </m:mover>
+		</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		    </m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:mover accent="true">
+			<m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub>
+			<m:mo>^</m:mo>
+		      </m:mover>
+		    </m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		    </m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:mover accent="true">
+			<m:msub><m:mi>Y</m:mi><m:mn>1</m:mn></m:msub>
+			<m:mo>^</m:mo>
+		      </m:mover>
+		    </m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	We may show this reconstruction operation as upsampling
+	followed by 2 filters, as in <link target-id="figure1" strength="2"/>(b). 
+      </para>
+
+      <para id="para7">
+	If 
+	<m:math>
+	  <m:ci>
+	    <m:mover accent="true">
+	      <m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub>
+	      <m:mo>^</m:mo>
+	    </m:mover>
+	  </m:ci>
+	</m:math> and 
+	
+	<m:math>
+	  <m:ci>
+	    <m:mover accent="true">
+	      <m:msub><m:mi>Y</m:mi><m:mn>1</m:mn></m:msub>
+	      <m:mo>^</m:mo>
+	    </m:mover>
+	  </m:ci>
+	</m:math> are not the same as 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub> 
+	  </m:ci>
+	</m:math> and 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>Y</m:mi><m:mn>1</m:mn></m:msub> 
+	  </m:ci>
+	</m:math>, how do they relate to each other? 
+      </para>
+
+      <para id="para8">
+	Now 
+	<equation id="eq10a">
+	  <m:math>
+	    <m:apply>
+	      <m:forall/>
+	      <m:bvar><m:ci>n</m:ci></m:bvar>
+	      <m:condition>
+		<m:apply>
+		  <m:eq/>
+		  <m:ci>n</m:ci>
+		  <m:ci>even</m:ci>
+		</m:apply>
+	      </m:condition>
+	      <m:apply>
+		<m:eq/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:mover accent="true">
+		      <m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub>
+		      <m:mo>^</m:mo>
+		    </m:mover>
+		  </m:ci>
+		  <m:ci>n</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>n</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	<equation id="eq10b">
+	  <m:math>
+	    <m:apply>
+	      <m:forall/>
+	      <m:bvar><m:ci>n</m:ci></m:bvar>
+	      <m:condition>
+		<m:apply>
+		  <m:eq/>
+		  <m:ci>n</m:ci>
+		  <m:ci>odd</m:ci>
+		</m:apply>
+	      </m:condition>
+	      <m:apply>
+		<m:eq/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:mover accent="true">
+		      <m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub>
+		      <m:mo>^</m:mo>
+		    </m:mover>
+		  </m:ci>
+		  <m:ci>n</m:ci>
+		</m:apply>
+		<m:cn>0</m:cn>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+	
+	Therefore 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:mover accent="true">
+		<m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub>
+		<m:mo>^</m:mo>
+	      </m:mover>
+	    </m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math> is a polynomial in <m:math><m:ci>z</m:ci></m:math>,
+	comprising <emphasis>only</emphasis> the terms in even powers
+	of <m:math><m:ci>z</m:ci></m:math> from 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub> 
+	    </m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math>. This may be written as:
+
+	<equation id="eq11">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:mover accent="true">
+		    <m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub>
+		    <m:mo>^</m:mo>
+		  </m:mover>
+		</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:sum/>
+		<m:domainofapplication>
+		  <m:ci>even n</m:ci>
+		</m:domainofapplication>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub> 
+		    </m:ci>
+		    <m:ci>n</m:ci>
+		  </m:apply>
+		  <m:apply>
+		    <m:power/>
+		    <m:ci>z</m:ci>
+		    <m:apply>
+		      <m:minus/>
+		      <m:ci>n</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+
+	      <m:apply>
+		<m:sum/>
+		<m:domainofapplication>
+		  <m:ci>all n</m:ci>
+		</m:domainofapplication>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		  <m:apply>
+		    <m:plus/>
+		    <m:apply>
+		      <m:times/>
+		      <m:apply>
+			<m:ci type="fn">
+			  <m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub> 
+			</m:ci>
+			<m:ci>n</m:ci>
+		      </m:apply>
+		      <m:apply>
+			<m:power/>
+			<m:ci>z</m:ci>
+			<m:apply>
+			  <m:minus/>
+			  <m:ci>n</m:ci>
+			</m:apply>
+		      </m:apply>
+		    </m:apply>
+		    <m:apply>
+		      <m:times/>
+		      <m:apply>
+			<m:ci type="fn">
+			  <m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub> 
+			</m:ci>
+			<m:ci>n</m:ci>
+		      </m:apply>
+		      <m:apply>
+			<m:power/>
+			<m:apply>
+			  <m:minus/>
+			  <m:ci>z</m:ci>
+			</m:apply>
+			<m:apply>
+			  <m:minus/>
+			  <m:ci>n</m:ci>
+			</m:apply>
+		      </m:apply>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub> 
+		    </m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub> 
+		    </m:ci>
+		    <m:apply>
+		      <m:minus/>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	Similarly 
+	
+	<equation id="eq12">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:mover accent="true">
+		    <m:msub><m:mi>Y</m:mi><m:mn>1</m:mn></m:msub>
+		    <m:mo>^</m:mo>
+		  </m:mover>
+		</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>Y</m:mi><m:mn>1</m:mn></m:msub> 
+		    </m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>Y</m:mi><m:mn>1</m:mn></m:msub> 
+		    </m:ci>
+		    <m:apply>
+		      <m:minus/>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+	
+	This is our general model for downsampling by 2, followed by
+	upsampling by 2 as defined in <link target-id="eq10a" strength="2"/> and <link target-id="eq10b" strength="2"/>.
+		
+      </para>
+    </section>
+
+  </content>
+</document>

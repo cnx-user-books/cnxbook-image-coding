@@ -1,0 +1,1078 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>JPEG Entropy Coding</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>78c73d0c-a583-465c-a537-d34e9f33312a</md:uuid>
+</metadata>
+
+  <content>
+    <para id="para1">
+      The entropy plots of the <link document="m11095" strength="3">Quantisation of the DCT coefficients</link> show the theoretical entropies
+      of each DCT sub-band. In practise this would be a poor way to code the
+      data because:
+
+      <list id="list1">
+	<item>
+	  64 separate entropy codes would be required (each requiring many extra
+	  states to represent run-length coding of zeros).
+	</item>
+	<item>
+	  The statistics for each code are likely to vary significantly from
+	  image to image.
+	</item>
+	<item>
+	  To transmit the code table for each sub-band as header information
+	  would involve a large coding overhead (many extra bits).
+	</item>
+	<item>
+	  Coding the sub-bands separately does not take account of the
+	  correlations which exist between the positions of the non-zero coefs
+	  in one sub-band with those of nearby sub-bands (see
+	  <link document="m11094" target-id="figure2" strength="2">subfigures (c) and (d)</link> from a previous module).
+	</item>
+      </list>
+
+      JPEG uses a clever alternative method of coding, based on combining
+      run-length and amplitude information into a single Huffman code for
+      the whole of the image (except the DC sub-band which is coded
+      separately because its statistics are so different).
+    </para>
+
+    <para id="para2">
+      The code is applied to each block of 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> quantised DCT coefs from a single 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> pel region. The blocks are the coefs <emphasis>before
+	reordering</emphasis> as shown in <link document="m11094" target-id="figure2" strength="2">subfigure (b)</link> of a previous module and comprise
+	one coef from each of the 64 sub-bands.
+    </para>
+
+    <para id="para3">
+      Each block of 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> quantised coefs is formed into a 1-D vector by zig-zag
+      scanning in the sequence:
+      <m:math display="block">
+	<m:matrix>
+	  <m:matrixrow>
+	    <m:cn>0</m:cn>
+	    <m:cn>1</m:cn>
+	    <m:cn>5</m:cn>
+	    <m:cn>6</m:cn>
+	    <m:cn>14</m:cn>
+	    <m:cn>15</m:cn>
+	    <m:cn>27</m:cn>
+	    <m:cn>28</m:cn>
+	  </m:matrixrow>
+	  <m:matrixrow>
+	    <m:cn>2</m:cn>
+	    <m:cn>4</m:cn>
+	    <m:cn>7</m:cn>
+	    <m:cn>13</m:cn>
+	    <m:cn>16</m:cn>
+	    <m:cn>26</m:cn>
+	    <m:cn>29</m:cn>
+	    <m:cn>42</m:cn>
+	  </m:matrixrow>
+	  <m:matrixrow>
+	    <m:cn>3</m:cn>
+	    <m:cn>8</m:cn>
+	    <m:cn>12</m:cn>
+	    <m:cn>17</m:cn>
+	    <m:cn>25</m:cn>
+	    <m:cn>30</m:cn>
+	    <m:cn>41</m:cn>
+	    <m:cn>43</m:cn>
+	  </m:matrixrow>
+	  <m:matrixrow>
+	    <m:cn>9</m:cn>
+	    <m:cn>11</m:cn>
+	    <m:cn>18</m:cn>
+	    <m:cn>24</m:cn>
+	    <m:cn>31</m:cn>
+	    <m:cn>40</m:cn>
+	    <m:cn>44</m:cn>
+	    <m:cn>53</m:cn>
+	  </m:matrixrow>
+	  <m:matrixrow>
+	    <m:cn>10</m:cn>
+	    <m:cn>19</m:cn>
+	    <m:cn>23</m:cn>
+	    <m:cn>32</m:cn>
+	    <m:cn>39</m:cn>
+	    <m:cn>45</m:cn>
+	    <m:cn>52</m:cn>
+	    <m:cn>54</m:cn>
+	  </m:matrixrow>
+	  <m:matrixrow>
+	    <m:cn>20</m:cn>
+	    <m:cn>22</m:cn>
+	    <m:cn>33</m:cn>
+	    <m:cn>38</m:cn>
+	    <m:cn>46</m:cn>
+	    <m:cn>51</m:cn>
+	    <m:cn>55</m:cn>
+	    <m:cn>60</m:cn>
+	  </m:matrixrow>
+	  <m:matrixrow>
+	    <m:cn>21</m:cn>
+	    <m:cn>34</m:cn>
+	    <m:cn>37</m:cn>
+	    <m:cn>47</m:cn>
+	    <m:cn>50</m:cn>
+	    <m:cn>56</m:cn>
+	    <m:cn>59</m:cn>
+	    <m:cn>61</m:cn>
+	  </m:matrixrow>
+	  <m:matrixrow>
+	    <m:cn>35</m:cn>
+	    <m:cn>36</m:cn>
+	    <m:cn>48</m:cn>
+	    <m:cn>49</m:cn>
+	    <m:cn>57</m:cn>
+	    <m:cn>58</m:cn>
+	    <m:cn>62</m:cn>
+	    <m:cn>63</m:cn>
+	  </m:matrixrow>
+	</m:matrix>
+      </m:math>
+    </para>
+
+    <section id="sec1">
+      <title>The JPEG Code for DC coefs</title>
+      <para id="sec1para1">
+	The first coefficient (0) of each block (vector) is the DC coef, which
+	represents the mean value of the pels in the block (see the top left
+	basis function in <link document="m11094" target-id="figure2" strength="2">subfigure (a)</link> from previous discussion).
+      </para>
+
+      <para id="sec1para2">
+	The DC coefs still exhibit significant local correlations (top
+	left of <link document="m11094" target-id="figure2" strength="2">subfigure (b)</link>), so differential coding is
+	used in which the value to be coded 
+	is the <emphasis>difference</emphasis> between the current DC coef and
+	that of the previous block - the blocks are scanned from left to
+	right, row by row. The first block in each row is coded with respect
+	to zero.
+      </para>
+
+      <para id="sec1para3">
+	The histogram of entropies of the DC coef differences is compared in
+	<link target-id="figure11" strength="2"/> with that of the raw DC coefs
+	from this previous <link document="m11094" target-id="figure2" strength="2">figure</link>. We note the histogram peak around zero and see
+	that the entropy is reduced from 6.42 bits to 6.07 bits.
+      </para>
+
+      <figure id="figure11">
+	<media id="idp708288" alt=""><image src="../../media/figure11-b11b.png" mime-type="image/png"/></media>
+	<caption>
+	  Histograms of the DC coefficients from the 
+	  <m:math>
+	    <m:apply>
+	      <m:times/>
+	      <m:cn>8</m:cn>
+	      <m:cn>8</m:cn>
+	    </m:apply>
+	  </m:math> DCT of Lenna, showing the entropy reduction with
+	  differential coding.
+	</caption>
+      </figure>
+
+      <para id="sec1para4">
+	The size of the differences can in theory be up to 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:mo>±</m:mo>
+	      <m:apply>
+		<m:times/>
+		<m:cn>255</m:cn>
+		<m:cn>8</m:cn>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:mo>±</m:mo>
+	      <m:cn>2040</m:cn>
+	    </m:apply>
+	  </m:apply>
+	</m:math> if the input pels occupy the range 
+	<m:math><m:cn>-128</m:cn></m:math> to 
+	<m:math>
+	  <m:apply>
+	    <m:mo>+</m:mo>
+	    <m:cn>127</m:cn>
+	  </m:apply>
+	</m:math> (the DCT has a gain of 8 at very low
+	frequencies). Hence the Huffman code table would have to be
+	quite large. JPEG adopts a much smaller code by using a form
+	of floating-point representation, where
+	<emphasis>Size</emphasis> is the base-2 exponent and
+	<emphasis>Additional Bits</emphasis> are used to code the
+	polarity and precise amplitude as follows:
+      </para>
+      
+      <!-- This CALS table template is generated by `table.el' version 1.5.32 -->
+      <table frame="all" id="table1" summary="">
+	<tgroup cols="4" align="left" colsep="1" rowsep="1">
+	  <thead valign="top">
+	    <row>
+	      <entry align="center">
+		DC Coef Difference
+	      </entry>
+	      <entry align="center">
+		Size
+	      </entry>
+	      <entry align="center">
+		Typical Huffman codes for Size
+	      </entry>
+	      <entry align="center">
+		Additional Bits (in binary)
+	      </entry>
+	    </row>
+	  </thead>
+	  <tbody valign="top">
+	    <row>
+	      <entry align="center">
+		0
+	      </entry>
+	      <entry align="center">
+		0
+	      </entry>
+	      <entry align="center">
+		00
+	      </entry>
+	      <entry align="center">
+		-
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		-1,1
+	      </entry>
+	      <entry align="center">
+		1
+	      </entry>
+	      <entry align="center">
+		010
+	      </entry>
+	      <entry align="center">
+		0,1
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		-3,-2,2,3
+	      </entry>
+	      <entry align="center">
+		2
+	      </entry>
+	      <entry align="center">
+		011
+	      </entry>
+	      <entry align="center">
+		00,01,10,11
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		-7,…,-4,4,…,7
+	      </entry>
+	      <entry align="center">
+		3
+	      </entry>
+	      <entry align="center">
+		100
+	      </entry>
+	      <entry align="center">
+		000,…,011,100,…111
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		-15,…-8,8,…,15
+	      </entry>
+	      <entry align="center">
+		4
+	      </entry>
+	      <entry align="center">
+		101
+	      </entry>
+	      <entry align="center">
+		0000,…,0111,1000,…,1111
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		⋮
+	      </entry>
+	      <entry align="center">
+		⋮
+	      </entry>
+	      <entry align="center">
+		⋮
+	      </entry>
+	      <entry align="center">
+		⋮
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		-1023,…-512,512,…,1023
+	      </entry>
+	      <entry align="center">
+		10
+	      </entry>
+	      <entry align="center">
+		1111 1110
+	      </entry>
+	      <entry align="center">
+		00 0000 0000,…,11 1111 1111
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		-2047,…-1024,1024,…2047
+	      </entry>
+	      <entry align="center">
+		11
+	      </entry>
+	      <entry align="center">
+		1 1111 1110
+	      </entry>
+	      <entry align="center">
+		000 0000 0000,…,111 1111 1111
+	      </entry>
+	    </row>
+	  </tbody>
+	</tgroup>
+      </table>
+
+      <para id="sec1para5">
+	Only Size needs to be Huffman coded in the above scheme,
+	since, within a given Size, all the input values have
+	sufficiently similar probabilities for there to be little gain
+	from entropy coding the Additional Bits (hence they are coded
+	in simple binary as listed). Each coded Size is followed by
+	the appropriate number of Additional Bits (equal to Size) to
+	define the sign and magnitude of the coefficient difference
+	exactly.
+      </para>
+
+      <para id="sec1para6">
+	There are only 12 Sizes to be Huffman coded, so specifying the
+	code table can be very simple and require relatively few bits
+	in the header.
+      </para>
+
+      <para id="sec1para7">
+	In JPEG all Huffman code tables are defined in the image
+	header. Each table requires 
+	<m:math>
+	  <m:apply>
+	    <m:plus/>
+	    <m:cn>16</m:cn>
+	    <m:ci>n</m:ci>
+	  </m:apply>
+	</m:math> bytes, where <m:math><m:ci>n</m:ci></m:math> is the
+	number of codewords in the table.
+      </para>
+
+      <para id="sec1para8">
+	The first 16 bytes list the number of codewords of each length
+	from 1 to 16 bits (codewords longer than 16 bits are
+	forbidden). The remaining <m:math><m:ci>n</m:ci></m:math>
+	bytes list the decoded output values of the
+	<m:math><m:ci>n</m:ci></m:math> codewords in ascending
+	codeword order (
+	<m:math>
+	  <m:apply>
+	    <m:lt/>
+	    <m:ci>n</m:ci>
+	    <m:cn>256</m:cn>
+	  </m:apply>
+	</m:math>). 
+      </para>
+
+      <para id="sec1para9">
+	Hence 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:plus/>
+	      <m:cn>16</m:cn>
+	      <m:cn>12</m:cn>
+	    </m:apply>
+	    <m:cn>28</m:cn>
+	  </m:apply>
+	</m:math> bytes are needed to specify the code table for DC
+	coefficients.
+      </para>
+    </section>
+
+    <section id="sec2">
+      <title>The JPEG Run-Amplitude Code</title>
+      <para id="sec2para1">
+	The remaining 63 coefs (the AC coefs) of each 64-element
+	vector usually contain many zeros and so are coded with a
+	combined run-amplitude Huffman code.
+      </para>
+
+      <para id="sec2para2">
+	The codeword represents the run-length of zeros before a
+	non-zero coef <emphasis>and</emphasis> the Size of that
+	coef. This is then followed by the Additional Bits which
+	define the coef amplitude and sign precisely. Size and
+	Additional Bits are defined just as for DC coefs.
+      </para>
+
+      <para id="sec2para3">
+	This 2-dimensional Huffman code (Run, Size) is efficient
+	because there is a strong correlation between the Size of a
+	coef and the expected Run of zeros which precedes it - small
+	coefs usually follow long runs; larger coefs tend to follow
+	shorter runs. No single 2-D event is so probable that the
+	Huffman code becomes inefficient.
+      </para>
+
+      <para id="sec2para4">In order to keep the code table size
+	<m:math><m:ci>n</m:ci></m:math> below 256, only the following
+	Run and Size values are coded:
+
+	<m:math display="block">
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>Run</m:ci>
+	    <m:apply>
+	      <m:tendsto/>
+	      <m:cn>0</m:cn>
+	      <m:cn>15</m:cn>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+
+	<m:math display="block">
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>Size</m:ci>
+	    <m:apply>
+	      <m:tendsto/>
+	      <m:cn>1</m:cn>
+	      <m:cn>10</m:cn>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+
+	These require 160 codes. Two extra codes, corresponding to
+	(Run,Size) = (0,0) and (15,0) are used for EOB (End-of-block)
+	and ZRL (Zero run length).
+      </para>
+
+      <para id="sec2para5">
+	EOB is transmitted after the last non-zero coef in a
+	64-vector. It is the most efficient way of coding the final
+	run of zeros. It is omitted in the rare case that the final
+	element of the vector is non-zero.
+      </para>
+
+      <para id="sec2para6">
+	ZRL is transmitted whenever 
+	<m:math>
+	  <m:apply>
+	    <m:gt/>
+	    <m:ci>Run</m:ci>
+	    <m:cn>15</m:cn>
+	  </m:apply>
+	</m:math>, and represents a run of 16 zeros (15 zeros and a
+	zero amplitude coef) which can be part of a longer run of any
+	length. Hence a run of 20 zeros followed by -5 would be coded
+	as 
+      </para>
+      
+      <code display="block" id="forloopexample">
+	
+	                   (ZRL) (4,3) 010
+	
+      </code>
+    
+      <para id="sec1para6a">
+	When the code tables are defined in the image header, each
+	codeword is assigned to a given (Run,Size) pair by making the
+	decoded output byte <emphasis>Code Byte</emphasis> equal to (
+	<m:math>
+	  <m:apply>
+	    <m:plus/>
+	    <m:apply>
+	      <m:times/>
+	      <m:cn>16</m:cn>
+	      <m:ci>Run</m:ci>
+	    </m:apply>
+	    <m:ci>Size</m:ci>
+	  </m:apply>
+	</m:math>).
+      </para>
+
+      <para id="sec2para7">
+	The default JPEG code for (Run,Size) of AC luminance DCT
+	coefficients is summarised below in order of decreasing code
+	probability: 
+      </para>
+
+      <!-- This CALS table template is generated by `table.el' version 1.5.32 -->
+      <table frame="all" id="table2" summary="">
+	<tgroup cols="6" align="left" colsep="1" rowsep="1">
+	  <thead valign="top">
+	    <row>
+	      <entry align="center">
+		(Run,Size)
+	      </entry>
+	      <entry align="center">
+		Code Byte (hex)
+	      </entry>
+	      <entry align="center">
+		Code Word (binary)
+	      </entry>
+	      <entry align="center">
+		(Run,Size)
+	      </entry>
+	      <entry align="center">
+		Code Byte (hex)
+	      </entry>
+	      <entry align="center">
+		Code Word (binary)
+	      </entry>
+	    </row>
+	  </thead>
+	  <tbody valign="top">
+	    <row>
+	      <entry align="center">
+		(0,1)
+	      </entry>
+	      <entry align="center">
+		01
+	      </entry>
+	      <entry align="center">
+		00
+	      </entry>
+	      <entry align="center">
+		(0,6)
+	      </entry>
+	      <entry align="center">
+		06
+	      </entry>
+	      <entry align="center">
+		1111000
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		(0,2)
+	      </entry>
+	      <entry align="center">
+		02
+	      </entry>
+	      <entry align="center">
+		01
+	      </entry>
+	      <entry align="center">
+		(1,3)
+	      </entry>
+	      <entry align="center">
+		13
+	      </entry>
+	      <entry align="center">
+		1111001
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		(0,3)
+	      </entry>
+	      <entry align="center">
+		03
+	      </entry>
+	      <entry align="center">
+		100
+	      </entry>
+	      <entry align="center">
+		(5,1)
+	      </entry>
+	      <entry align="center">
+		51
+	      </entry>
+	      <entry align="center">
+		1111010
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		(EOB)
+	      </entry>
+	      <entry align="center">
+		00
+	      </entry>
+	      <entry align="center">
+		1010
+	      </entry>
+	      <entry align="center">
+		(6,1)
+	      </entry>
+	      <entry align="center">
+		61
+	      </entry>
+	      <entry align="center">
+		1111011
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		(0,4)
+	      </entry>
+	      <entry align="center">
+		04
+	      </entry>
+	      <entry align="center">
+		1011
+	      </entry>
+	      <entry align="center">
+		(0,7)
+	      </entry>
+	      <entry align="center">
+		07
+	      </entry>
+	      <entry align="center">
+		11111000
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		(1,1)
+	      </entry>
+	      <entry align="center">
+		11
+	      </entry>
+	      <entry align="center">
+		1100
+	      </entry>
+	      <entry align="center">
+		(2,2)
+	      </entry>
+	      <entry align="center">
+		22
+	      </entry>
+	      <entry align="center">
+		11111001
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		(0,5)
+	      </entry>
+	      <entry align="center">
+		05
+	      </entry>
+	      <entry align="center">
+		11010
+	      </entry>
+	      <entry align="center">
+		(7,1)
+	      </entry>
+	      <entry align="center">
+		71
+	      </entry>
+	      <entry align="center">
+		11111010
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		(1,2)
+	      </entry>
+	      <entry align="center">
+		12
+	      </entry>
+	      <entry align="center">
+		11011
+	      </entry>
+	      <entry align="center">
+		(1,4)
+	      </entry>
+	      <entry align="center">
+		14
+	      </entry>
+	      <entry align="center">
+		111110110
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		(2,1)
+	      </entry>
+	      <entry align="center">
+		21
+	      </entry>
+	      <entry align="center">
+		11100
+	      </entry>
+	      <entry align="center">
+
+	      </entry>
+	      <entry align="center">
+		⋮
+	      </entry>
+	      <entry align="center">
+
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		(3,1)
+	      </entry>
+	      <entry align="center">
+		31
+	      </entry>
+	      <entry align="center">
+		111010
+	      </entry>
+	      <entry align="center">
+		(ZRL)
+	      </entry>
+	      <entry align="center">
+		F0
+	      </entry>
+	      <entry align="center">
+		11111111001
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		(4,1)
+	      </entry>
+	      <entry align="center">
+		41
+	      </entry>
+	      <entry align="center">
+		111011
+	      </entry>
+	      <entry align="center">
+
+	      </entry>
+	      <entry align="center">
+		⋮
+	      </entry>
+	      <entry align="center">
+
+	      </entry>
+	    </row>
+	  </tbody>
+	</tgroup>
+      </table>
+
+      <para id="sec2para8">
+	As an example, let us code the following 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>8</m:cn>
+	    <m:cn>8</m:cn>
+	  </m:apply>
+	</m:math> block:
+
+	<m:math display="block">
+	  <m:matrix>
+	    <m:matrixrow>
+	      <m:cn>-13</m:cn>
+	      <m:cn>-3</m:cn>
+	      <m:cn>2</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>1</m:cn>
+	      <m:cn>0</m:cn>
+	    </m:matrixrow>
+	     <m:matrixrow>
+	      <m:cn>6</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	    </m:matrixrow>
+	     <m:matrixrow>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	    </m:matrixrow>
+	     <m:matrixrow>
+	      <m:cn>-1</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	    </m:matrixrow>
+	     <m:matrixrow>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	    </m:matrixrow>
+	     <m:matrixrow>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	    </m:matrixrow>
+	     <m:matrixrow>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	    </m:matrixrow>
+	     <m:matrixrow>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	      <m:cn>0</m:cn>
+	    </m:matrixrow>
+	  </m:matrix>
+	</m:math>
+
+	Concerting this to (DC Size) or (Run,Size) and values for the
+	Additional Bits gives:
+      </para>
+      
+      <code display="block" id="idp9929024">
+	
+	(4) -13 (0,2) -3 (0,3) 6  (2,2)  2  (3,1)  -1  (ZRL) (1,1) 1  (EOB)
+	101 0010 01 00 100 110 11111001 10 111010 0 11111111001 1100 1 1010
+	
+      </code>
+
+      <para id="sec2para9">
+	The compressed bitstream for this block is listed on the lower
+	line, assuming that the default Huffman code tables, given
+	above, are used.
+      </para>
+
+      <para id="sec2para10">
+	<link target-id="figure12" strength="2"/> shows the histogram of
+	probabilities for the (Run,Size) codewords used to code Lenna
+	using the 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>Q</m:mi><m:mi>lum</m:mi></m:msub>
+	  </m:ci>
+	</m:math> quantisation matrix. The bin number represents the
+	decoded byte value.
+      </para>
+
+      <para id="sec2para11">
+	<link target-id="figure13" strength="2"/> shows the equivalent
+	histogram when the quantisation matrix is 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>2</m:cn>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>lum</m:mi></m:msub>
+	    </m:ci>
+	  </m:apply>
+	</m:math>.
+      </para>      
+
+      <figure id="figure12">
+	<media id="idp8477280" alt=""><image src="../../media/figure12-9833.png" mime-type="image/png"/></media>
+	<caption>
+	  Histogram of the (Run,Size) codewords for the DCT of Lenna,
+	  quantised using 
+	  <m:math>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>lum</m:mi></m:msub>
+	    </m:ci>
+	  </m:math>.
+	</caption>
+      </figure>
+
+      <figure id="figure13">
+	<media id="idp9617904" alt=""><image src="../../media/figure13-ecd0.png" mime-type="image/png"/></media>
+	<caption>
+	  Histogram of the (Run,Size) codewords for the DCT of Lenna,
+	  quantised using 
+	  <m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>2</m:cn>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>lum</m:mi></m:msub>
+	    </m:ci>
+	  </m:apply>
+	</m:math>.
+	</caption>
+      </figure>
+
+      <para id="sec2para12">
+	Note the strong similarity between these  histograms, despite
+	the fact that <link target-id="figure13" strength="2"/>
+	represents only 
+	<m:math>
+	  <m:apply>
+	    <m:divide/>
+	    <m:cn>2</m:cn>
+	    <m:cn>3</m:cn>
+	  </m:apply>
+	</m:math> as many events. Only the EOB probability changes
+	significantly, because its probability goes up as the number
+	of events (non-zero coefs) per block goes down.
+      </para>
+
+      <para id="sec2para13">
+	It turns out that the (Run,Size) histogram remains relatively
+	constant over a wide range of image material and across
+	different regions of each image. This is because of the strong
+	correlation between the run lengths and expected coef
+	sizes. The number of events per block varies considerably
+	depending on the local activity in the image, but the
+	probability distribution of those events (except for EOB)
+	changes much less.
+      </para>
+
+      <para id="sec2para14">
+	<link target-id="figure12" strength="2"/> and <link target-id="figure13" strength="2"/> also give the mean bit rates
+	to code Lenna for the two quantisation matrices. Comparing
+	these with the theoretical entropies from this <link document="m11095" target-id="figure10" strength="2">figure</link> (lower row)
+	we get:
+      </para>
+
+      <!-- This CALS table template is generated by `table.el' version 1.5.32 -->
+      <table frame="all" id="table3" summary="">
+	<tgroup cols="4" align="left" colsep="1" rowsep="1">
+	  <thead valign="top">
+	    <row>
+	      <entry align="center">
+		Q matrix
+	      </entry>
+	      <entry align="center">
+		Mean Entropy (b/pel)
+	      </entry>
+	      <entry align="center">
+		JPEG Bit Rate (b/pel)
+	      </entry>
+	      <entry align="center">
+		JPEG efficiency
+	      </entry>
+	    </row>
+	  </thead>
+	  <tbody valign="top">
+	    <row>
+	      <entry align="center">
+		<m:math>
+		  <m:ci>
+		    <m:msub><m:mi>Q</m:mi><m:mi>lum</m:mi></m:msub>
+		  </m:ci>
+		</m:math>
+	      </entry>
+	      <entry align="center">
+		0.8595
+	      </entry>
+	      <entry align="center">
+		0.8709
+	      </entry>
+	      <entry align="center">
+		98.7%
+	      </entry>
+	    </row>
+	    <row>
+	      <entry align="center">
+		<m:math>
+		  <m:apply>
+		    <m:times/>
+		    <m:cn>2</m:cn>
+		    <m:ci>
+		      <m:msub><m:mi>Q</m:mi><m:mi>lum</m:mi></m:msub>
+		    </m:ci>
+		  </m:apply>
+		</m:math>
+	      </entry>
+	      <entry align="center">
+		0.5551
+	      </entry>
+	      <entry align="center">
+		0.5595
+	      </entry>
+	      <entry align="center">
+		99.21%
+	      </entry>
+	    </row>
+	  </tbody>
+	</tgroup>
+      </table>
+
+      <para id="sec2para15">
+	Hence we see the high efficiency of the (Run,Size) code at two
+	quite different compression factors. This tends to apply over
+	a wide range of images and compression factors and is an
+	impressive achievement.
+      </para>
+
+      <para id="sec2para16">
+	There is even very Little efficiency lost if a single code
+	table is used for many images, which can avoid the need to
+	transmit the 
+	<m:math>
+	  <m:apply>
+	    <m:plus/>
+	    <m:cn>16</m:cn>
+	    <m:ci>n</m:ci>
+	  </m:apply>
+	</m:math> (168 bytes) of code definition in the header of each
+	image. Using the recommended JPEG default luminance tables
+	(Annex K.3.3) the above efficiencies drop to 97.35% and 95.74%
+	respectively. 
+      </para>
+    </section>
+  </content>
+  
+</document>

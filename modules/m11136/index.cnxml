@@ -1,0 +1,506 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>Perfect Reconstruction (PR)</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>3471b3bf-b6e2-4c7d-90b2-2b200b35ef6d</md:uuid>
+</metadata>
+  
+  <content>
+    <para id="para1">
+      We are now able to generalize our analysis for arbitrary filters 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math>, 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci>
+      </m:math>, 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math> and 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci>
+      </m:math>. Substituting <link document="m11135" target-id="eq11" strength="2">this equation</link> and <link document="m11135" target-id="eq12" strength="2">this equation</link> in our
+      discussion of 2-band filter bank into <link document="m11135" target-id="eq9" strength="2">this earlier equation</link> and then
+      using <link document="m11135" target-id="eq4a" strength="2">this
+      equation</link> and <link document="m11135" target-id="eq4b" strength="2">this equation</link> from the same discussion, we
+      get:
+
+      <equation id="eq13">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:mover accent="true">
+		  <m:mi>X</m:mi>
+		  <m:mo>^</m:mo>
+		</m:mover>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:plus/>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub> 
+		    </m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>Y</m:mi><m:mn>0</m:mn></m:msub> 
+		    </m:ci>
+		    <m:apply>
+		      <m:minus/>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>Y</m:mi><m:mn>1</m:mn></m:msub> 
+		    </m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		  <m:apply>
+		    <m:ci type="fn">
+		      <m:msub><m:mi>Y</m:mi><m:mn>1</m:mn></m:msub> 
+		    </m:ci>
+		    <m:apply>
+		      <m:minus/>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    
+	    <m:apply>
+	      <m:plus/>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">X</m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">X</m:ci>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">X</m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">X</m:ci>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+
+	    <m:apply>
+	      <m:plus/>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">X</m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:apply>
+		    <m:times/>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		      </m:ci>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		      </m:ci>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:times/>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		      </m:ci>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+		      </m:ci>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">X</m:ci>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:apply>
+		    <m:times/>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		      </m:ci>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		      </m:ci>
+		      <m:apply>
+			<m:minus/>
+			<m:ci>z</m:ci>
+		      </m:apply>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:times/>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		      </m:ci>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		    <m:apply>
+		      <m:ci type="fn">
+			<m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+		      </m:ci>
+		      <m:apply>
+			<m:minus/>
+			<m:ci>z</m:ci>
+		      </m:apply>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      If we require 
+      <m:math>
+	<m:apply>
+	  <m:equivalent/>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:mover accent="true">
+		<m:mi>X</m:mi>
+		<m:mo>^</m:mo>
+	      </m:mover>
+	    </m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	  <m:apply>
+	    <m:ci type="fn">X</m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:apply>
+      </m:math> - the Perfect Reconstruction (PR) condition - then:
+
+      <equation id="eq14">
+	<m:math>
+	  <m:apply>
+	    <m:equivalent/>
+	    <m:apply>
+	      <m:plus/>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:cn>2</m:cn>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      and
+      
+      <equation id="eq15">
+	<m:math>
+	  <m:apply>
+	    <m:equivalent/>
+	    <m:apply>
+	      <m:plus/>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		   <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:cn>0</m:cn>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      Identity <link target-id="eq15" strength="2"/> is known as the
+      <term>anti-aliasing condition</term> because the term in 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">X</m:ci>
+	  <m:apply>
+	    <m:minus/>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:apply>
+      </m:math> in <link target-id="eq13" strength="2"/> is the unwanted
+      aliasing term caused by down-sampling 
+      <m:math>
+	<m:ci type="vector">
+	  <m:msub><m:mi>y</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math> and 
+      <m:math>
+	<m:ci type="vector">
+	  <m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci>
+      </m:math> by 2.
+    </para>
+
+    <para id="para2">
+      It is straightforward to show that the expression for 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math>, 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci>
+      </m:math>, 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math> and 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci>
+      </m:math>, given in <link document="m11135" target-id="eq4a" strength="2">this equation</link>, <link document="m11135" target-id="eq4b" strength="2">this equation</link>, <link document="m11135" target-id="eq8a" strength="2">this equation</link>
+      and <link document="m11135" target-id="eq8b" strength="2">this
+      equation</link> for the filters based on the Haar transform,
+      satisfy <link target-id="eq14" strength="2"/> and <link target-id="eq15" strength="2"/>. They are the simplest set of
+      filters which do.
+    </para>
+
+    <para id="para3">
+      Before we look at more complicated PR filters, we examine how
+      the filter structures of <link document="m11135" target-id="figure1" strength="2">this figure</link> may be extended to form a
+      binary filter tree (and the discrete wavelet transform).
+    </para>
+
+  </content>
+</document>

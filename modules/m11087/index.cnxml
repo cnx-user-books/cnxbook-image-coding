@@ -1,0 +1,573 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>The Haar Transform</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>7f3b82f9-e2b5-4936-b1bd-c5edd2268932</md:uuid>
+</metadata>
+
+  <content>
+    <para id="para">
+      Probably the simplest useful energy compression process is the
+      Haar transform. In 1-dimension, this transforms a 2-element
+      vector 
+      <m:math>
+	<m:apply>
+	  <m:transpose/>
+	  <m:matrix>
+	    <m:matrixrow>
+	      <m:apply>
+		<m:ci type="fn">x</m:ci>
+		<m:cn>1</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">x</m:ci>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	    </m:matrixrow>
+	  </m:matrix>
+	</m:apply>
+      </m:math> into 
+      <m:math>
+	<m:apply>
+	  <m:transpose/>
+	  <m:matrix>
+	    <m:matrixrow>
+	      <m:apply>
+		<m:ci type="fn">y</m:ci>
+		<m:cn>1</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">y</m:ci>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	    </m:matrixrow>
+	  </m:matrix>
+	</m:apply>
+      </m:math> using:
+
+      <equation id="eq2">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:vector>
+	      <m:apply>
+		<m:ci type="fn">y</m:ci>
+		<m:cn>1</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">y</m:ci>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	    </m:vector>
+	    <m:apply>
+	      <m:times/>
+	      <m:ci type="matrix">T</m:ci>
+	      <m:vector>
+		<m:apply>
+		  <m:ci type="fn">x</m:ci>
+		  <m:cn>1</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">x</m:ci>
+		  <m:cn>2</m:cn>
+		</m:apply>
+	      </m:vector>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>  
+      
+      where 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci type="matrix">T</m:ci>
+	  <m:apply>
+	    <m:times/>
+	    <m:apply>
+	      <m:divide/>
+	      <m:cn>1</m:cn>
+	      <m:apply>
+		<m:root/>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	    </m:apply>
+	    <m:matrix>
+	      <m:matrixrow>
+		<m:cn>1</m:cn>
+		<m:cn>1</m:cn>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:cn>1</m:cn>
+		<m:cn>-1</m:cn>
+	      </m:matrixrow>
+	    </m:matrix>
+	  </m:apply>
+	</m:apply>
+      </m:math>. 
+
+      Thus 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">y</m:ci>
+	  <m:cn>1</m:cn>
+	</m:apply>
+      </m:math> and 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">y</m:ci>
+	  <m:cn>2</m:cn>
+	</m:apply>
+      </m:math> are simply the sum and difference of 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">x</m:ci>
+	  <m:cn>1</m:cn>
+	</m:apply>
+      </m:math> and 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">x</m:ci>
+	  <m:cn>2</m:cn>
+	</m:apply>
+      </m:math>, scaled by 
+      <m:math>
+	<m:apply>
+	  <m:divide/>
+	  <m:cn>1</m:cn>
+	  <m:apply>
+	    <m:root/>
+	    <m:cn>2</m:cn>
+	  </m:apply>
+	</m:apply>
+      </m:math> to preserve energy.
+    </para>
+
+    <para id="para2">
+      Note that <m:math><m:ci type="matrix">T</m:ci></m:math> is an
+      orthonormal matrix because its rows are orthogonal to each other
+      (their dot products are zero) and they are normalised to unit
+      magnitude. Therefore 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:apply>
+	    <m:inverse/>
+	    <m:ci type="matrix">T</m:ci>
+	  </m:apply>
+	  <m:apply>
+	    <m:transpose/>
+	    <m:ci type="matrix">T</m:ci>
+	  </m:apply>
+	</m:apply>
+      </m:math>. (In this case <m:math><m:ci type="matrix">T</m:ci></m:math> is symmetric so
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:apply>
+	    <m:transpose/>
+	    <m:ci type="matrix">T</m:ci>
+	  </m:apply>
+	  <m:ci type="matrix">T</m:ci>
+	</m:apply>
+      </m:math>.) Hence we may recover <m:math><m:ci type="matrix">x</m:ci></m:math> from <m:math><m:ci type="matrix">y</m:ci></m:math> using:
+      
+      <equation id="eq3">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:vector>
+	      <m:apply>
+		<m:ci type="fn">x</m:ci>
+		<m:cn>1</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">x</m:ci>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	    </m:vector>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:transpose/>
+		<m:ci type="matrix">T</m:ci>
+	      </m:apply>
+	      <m:vector>
+		<m:apply>
+		  <m:ci type="fn">y</m:ci>
+		  <m:cn>1</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">y</m:ci>
+		  <m:cn>2</m:cn>
+		</m:apply>
+	      </m:vector>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>  
+      
+      In 2-dimensions <m:math><m:ci type="matrix">x</m:ci></m:math>
+      and <m:math><m:ci type="matrix">y</m:ci></m:math> become
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>2</m:cn>
+	  <m:cn>2</m:cn>
+	</m:apply>
+      </m:math> matrices. We may transform first the columns of
+      <m:math><m:ci type="matrix">x</m:ci></m:math>, by premultiplying
+      by <m:math><m:ci type="matrix">T</m:ci></m:math>, and then the
+      rows of the result by postmultiplying by 
+      <m:math>
+	<m:apply>
+	  <m:transpose/>
+	  <m:ci type="matrix">T</m:ci>
+	</m:apply>
+      </m:math>. Hence: 
+
+      <equation id="eq4a">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci type="matrix">y</m:ci>
+	    <m:apply>
+	      <m:times/>
+	      <m:ci type="matrix">T</m:ci>
+	      <m:ci type="matrix">x</m:ci>
+	      <m:apply>
+		<m:transpose/>
+		<m:ci type="matrix">T</m:ci>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      and to invert:
+      <equation id="eq4b">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci type="matrix">x</m:ci>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:transpose/>
+		<m:ci type="matrix">T</m:ci>
+	      </m:apply>	    
+	      <m:ci type="matrix">y</m:ci>
+	      <m:ci type="matrix">T</m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      To show more clearly what is happening:
+    </para>
+
+    <para id="para2a">
+      
+      If
+      <m:math display="block">
+	<m:apply>
+	  <m:eq/>
+	  <m:ci type="matrix">x</m:ci>
+	  <m:matrix>
+	    <m:matrixrow>
+	      <m:ci>a</m:ci>
+	      <m:ci>b</m:ci>
+	    </m:matrixrow>
+	    <m:matrixrow>
+	      <m:ci>c</m:ci>
+	      <m:ci>d</m:ci>
+	    </m:matrixrow>
+	  </m:matrix>
+	</m:apply>
+      </m:math>
+
+      then 
+
+      <m:math display="block">
+	<m:apply>
+	  <m:eq/>
+	  <m:ci type="matrix">y</m:ci>
+	  <m:apply>
+	    <m:times/>
+	    <m:apply>
+	      <m:divide/>
+	      <m:cn>1</m:cn>
+	      <m:cn>2</m:cn>
+	    </m:apply>
+	    <m:matrix>
+	      <m:matrixrow>
+		<m:apply>
+		  <m:plus/>
+		  <m:ci>a</m:ci>
+		  <m:ci>b</m:ci>
+		  <m:ci>c</m:ci>
+		  <m:ci>d</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:minus/>
+		  <m:apply>
+		    <m:plus/>
+		    <m:apply>
+		      <m:minus/>
+		      <m:ci>a</m:ci>
+		      <m:ci>b</m:ci>
+		    </m:apply>
+		    <m:ci>c</m:ci>
+		  </m:apply>
+		  <m:ci>d</m:ci>
+		</m:apply>
+	      </m:matrixrow>
+	      <m:matrixrow>
+		<m:apply>
+		  <m:minus/>
+		  <m:apply>
+		    <m:minus/>
+		    <m:apply>
+		      <m:plus/>
+		      <m:ci>a</m:ci>
+		      <m:ci>b</m:ci>
+		    </m:apply>
+		    <m:ci>c</m:ci>
+		  </m:apply>
+		  <m:ci>d</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:apply>
+		    <m:minus/>
+		    <m:apply>
+		      <m:minus/>
+		      <m:ci>a</m:ci>
+		      <m:ci>b</m:ci>
+		    </m:apply>
+		    <m:ci>c</m:ci>
+		  </m:apply>
+		  <m:ci>d</m:ci>
+		</m:apply>
+	      </m:matrixrow>
+	    </m:matrix>
+	  </m:apply>
+	</m:apply>
+      </m:math>
+
+      These operations correspond to the following filtering
+      processes:
+
+      <list id="list2">
+	<item>
+	  <emphasis>Top left:</emphasis>
+	  <m:math>
+	    <m:apply>
+	      <m:plus/>
+	      <m:ci>a</m:ci>
+	      <m:ci>b</m:ci>
+	      <m:ci>c</m:ci>
+	      <m:ci>d</m:ci>
+	    </m:apply>
+	  </m:math> = 4-point average or 2-D lowpass (Lo-Lo) filter.
+	</item>
+
+	<item>
+	  <emphasis>Top right:</emphasis>
+	  <m:math>
+	    <m:apply>
+	      <m:minus/>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>a</m:ci>
+		  <m:ci>b</m:ci>
+		</m:apply>
+		<m:ci>c</m:ci>
+	      </m:apply>
+	      <m:ci>d</m:ci>
+	    </m:apply>
+	  </m:math> = Average horizontal gradient or horizontal
+	  highpass and vertical lowpass (Hi-Lo) filter.
+	</item>
+
+	<item>
+	  <emphasis>Lower left:</emphasis>
+	  <m:math>
+	    <m:apply>
+	      <m:minus/>
+	      <m:apply>
+		<m:minus/>
+		<m:apply>
+		  <m:plus/>
+		  <m:ci>a</m:ci>
+		  <m:ci>b</m:ci>
+		</m:apply>
+		<m:ci>c</m:ci>
+	      </m:apply>
+	      <m:ci>d</m:ci>
+	    </m:apply>
+	  </m:math> = Average vertical gradient or
+	  horizontal lowpass and vertical highpass (Lo-Hi) filter.
+	</item>
+
+	<item>
+	  <emphasis>Lower right:</emphasis>
+	  <m:math>
+	    <m:apply>
+	      <m:plus/>
+	      <m:apply>
+		<m:minus/>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>a</m:ci>
+		  <m:ci>b</m:ci>
+		</m:apply>
+		<m:ci>c</m:ci>
+	      </m:apply>
+	      <m:ci>d</m:ci>
+	    </m:apply>   
+	  </m:math> = Diagonal curvature or 2-D highpass (Hi-Hi)
+	  filter.
+	</item>
+      </list>
+
+      To apply this transform to a complete image, we group the pels
+      into 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>2</m:cn>
+	  <m:cn>2</m:cn>
+	</m:apply>
+      </m:math> blocks and apply <link target-id="eq4a" strength="2"/> to
+      each block. The result (after reordering) is shown in <link target-id="figure1b" strength="2"/>. To view the result sensibly,
+      we have grouped all the top left components of the
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>2</m:cn>
+	  <m:cn>2</m:cn>
+	</m:apply>
+      </m:math> blocks in <m:math><m:ci type="matrix">y</m:ci></m:math> together to form the top left
+      subimage in <link target-id="figure1b" strength="2"/>, and done the
+      same for the components in the other 3 positions to form the
+      corresponding other 3 subimages.
+    </para>
+
+    <figure orient="horizontal" id="figure1">
+      <subfigure id="figure1a">
+	<media id="idm1004416" alt=""><image src="../../media/figure1a.png" mime-type="image/png"/></media>
+      </subfigure>
+      <subfigure id="figure1b">
+	<media id="idm8720" alt=""><image src="../../media/figure1b.png" mime-type="image/png"/></media>
+      </subfigure>
+      <caption>
+	Original <link target-id="figure1a" strength="2"/> and the Level
+	1 Haar transform <link target-id="figure1b" strength="2"/> of the
+	'Lenna' image.
+      </caption>
+    </figure>
+
+    <para id="para3">
+      It is clear from <link target-id="figure1b" strength="2"/> that
+      most of the energy is contained in the top left (Lo-Lo) subimage
+      and the least energy is in the lower right (Hi-Hi)
+      subimage. Note how the top right (Hi-Lo) subimage contains the
+      near-vertical edges and the lower left (Lo-Hi) subimage contains
+      the near-horizontal edges.
+    </para>
+
+    <para id="para4">
+      The energies of the subimages and their percentages of the total
+      are:
+    </para>
+
+    <!-- This CALS table template is generated by `table.el' version
+    1.5.32 --> 
+    <table frame="all" id="table1" summary="">
+      <tgroup cols="4" align="left" colsep="1" rowsep="1">
+	<thead valign="top">
+	  <row>
+	    <entry align="center">
+	      Lo-Lo
+	    </entry>
+	    <entry align="center">
+	      Hi-Lo
+	    </entry>
+	    <entry align="center">
+	      Lo-Hi
+	    </entry>
+	    <entry align="center">
+	      Hi-Hi
+	    </entry>
+	  </row>
+	</thead>
+	<tbody valign="top">
+	  <row>
+	    <entry align="center">
+	      <m:math>
+		<m:cn type="e-notation">201.73<m:sep/>6</m:cn>
+	      </m:math>
+	    </entry>
+	    <entry align="center">
+	      <m:math>
+		<m:cn type="e-notation">4.56<m:sep/>6</m:cn>
+	      </m:math>
+	    </entry>
+	    <entry align="center">
+	      <m:math>
+		<m:cn type="e-notation">1.89<m:sep/>6</m:cn>
+	      </m:math>
+	    </entry>
+	    <entry align="center">
+	      <m:math>
+		<m:cn type="e-notation">0.82<m:sep/>6</m:cn>
+	      </m:math>
+	    </entry>
+	  </row>
+	  <row>
+	    <entry align="center">
+	      96.5%
+	    </entry>
+	    <entry align="center">
+	      2.2%
+	    </entry>
+	    <entry align="center">
+	      0.9%
+	    </entry>
+	    <entry align="center">
+	      0.4%
+	    </entry>
+	  </row>
+	</tbody>
+      </tgroup>
+    </table>
+
+    <para id="para5">
+      Total energy in <link target-id="figure1a" strength="2"/> and <link target-id="figure1b" strength="2"/> =
+      <m:math>
+	<m:cn type="e-notation">208.99<m:sep/>6</m:cn>
+      </m:math>.
+    </para>
+
+    <para id="para6">
+      We see that a significant compression of energy into the Lo-Lo
+      subimage has been achieved. However the energy measurements do
+      not tell us directly how much data compression this gives.
+    </para>
+
+    <para id="para7">
+      A much more useful measure than energy is the
+      <emphasis>entropy</emphasis> of the subimages after a given
+      amount of quantisation. This gives the minimum number of bits
+      per pel needed to represent the quantised data for each
+      subimage, to a given accuracy, assuming that we use an ideal
+      entropy code. By comparing the total entropy of the 4 subimages
+      with that of the original image, we can estimate the compression
+      that one level of the Haar transform can provide.
+    </para>
+
+  </content>  
+</document>

@@ -1,0 +1,113 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>Wavelets</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>68097f77-b7c5-4bb5-b01a-3e175fa26ec4</md:uuid>
+</metadata>
+  
+
+  <content>
+    <para id="para1">
+      The process of creating the outputs 
+      <m:math>
+	<m:ci type="vector">
+	  <m:msub><m:mi>y</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci>
+      </m:math> to 
+      <m:math>
+	<m:ci type="vector">
+	  <m:msub><m:mi>y</m:mi><m:mn>0000</m:mn></m:msub>
+	</m:ci>
+      </m:math> from <m:math><m:ci type="vector">x</m:ci></m:math> is
+      known as the <term>discrete wavelet transform</term> (DWT); and
+      the reconstruction process is the <term>inverse DWT</term>.
+    </para>
+    
+    <para id="para2">
+      The word <term>wavelet</term> refers to the impulse response of
+      the cascade of filters which leads to a given bandpass
+      output. The frequency response of the wavelet at level
+      <m:math><m:ci>k</m:ci></m:math> is obtained by substituting 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>z</m:ci>
+	  <m:apply>
+	    <m:exp/>
+	    <m:apply>
+	      <m:times/>
+	      <m:imaginaryi/>
+	      <m:ci>ω</m:ci>
+	      <m:ci>
+		<m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+	      </m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:apply>
+      </m:math> in the z-transfer function 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi>
+	    <m:mrow>
+	      <m:mi>k</m:mi>
+	      <m:mo>,</m:mo>
+	      <m:mn>1</m:mn>
+	    </m:mrow>
+	  </m:msub>
+	</m:ci>
+      </m:math> from <link document="m11137" target-id="eq22a" strength="2">this equation</link> and <link document="m11137" target-id="eq22b" strength="2">this equation</link> from our
+      discussion of the binary filter tree.
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+	</m:ci>
+      </m:math> is the sampling period at the input to the filter
+      tree.
+    </para>
+
+    <para id="para3">
+      Since the frequency responses of the bandpass bands are scaled
+      down by 2:1 at each level, their impulse responses become longer
+      by the same factor at each level, <emphasis>BUT</emphasis> their
+      shapes remain very similar. The basic impulse response wave
+      shape is almost independent of scale and known as the
+      <term>mother wavelet</term>.
+    </para>
+
+    <para id="para4">
+      The impulse response to a lowpass output 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi>
+	    <m:mrow>
+	      <m:mi>k</m:mi>
+	      <m:mo>,</m:mo>
+	      <m:mn>0</m:mn>
+	    </m:mrow>
+	  </m:msub>
+	</m:ci>
+      </m:math> is called the <term>scaling function</term> at level
+      <m:math><m:ci>k</m:ci></m:math>. 
+    </para>
+
+    <para id="para5">
+      <link target-id="figure5" strength="2"/> shows these effects using
+      the impulse responses and frequency responses for the five
+      outputs of the 4-level tree of Haar filters, based on the
+      z-transforms given in this group of <link document="m11137" target-id="eq23a" strength="2">equations</link>.  Notice the abrupt
+      transitions in the middle and at the ends of the Haar
+      wavelets. These result in noticeable
+      <emphasis>blocking</emphasis> artefacts in decompressed images
+      (as in part (b) of this previous <link document="m11089" target-id="figure13" strength="2">figure</link>).
+    </para>
+
+    <figure id="figure5">
+      <media id="idp2734448" alt=""><image src="../../media/figure5-c245.png" mime-type="image/png"/></media>
+      <caption>
+	Impulse responses and frequency responses of the 4-level tree
+	of Haar filters.
+      </caption>
+    </figure>
+
+  </content>
+</document>

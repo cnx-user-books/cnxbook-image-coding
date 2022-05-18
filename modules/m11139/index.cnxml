@@ -1,0 +1,3253 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>Good Filters / Wavelets</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>477b5c17-057f-468e-8dd3-0428913d9ed9</md:uuid>
+</metadata>
+  
+
+  <content>
+    <para id="para1">
+      Our main aim now is to search for better filters / wavelets
+      which result in compression performance that rivals or beats the
+      DCT.
+    </para>
+
+    <para id="para2">
+      We assume that perfect reconstruction is a prime requirement, so
+      that the only image degradations are caused by coefficient
+      quantisation, and may be made as small as we wish by increasing
+      bit rate.
+    </para>
+
+    <para id="para3">
+      We start our search with the two PR identities from our
+      discussion of <link document="m11136" target-id="eq14" strength="2">Perfect Reconstruction</link>, which we repeat
+      here:
+
+      <equation id="eq24">
+	<m:math>
+	  <m:apply>
+	    <m:equivalent/>
+	    <m:apply>
+	      <m:plus/>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:cn>2</m:cn>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      and
+      
+      <equation id="eq25">
+	<m:math>
+	  <m:apply>
+	    <m:equivalent/>
+	    <m:apply>
+	      <m:plus/>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		   <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:cn>0</m:cn>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      The usual way of satisfying the anti-aliasing condition (<link target-id="eq25" strength="2"/>), while permitting 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math> and 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math> to have lowpass responses (passband where 
+      <m:math>
+	<m:apply>
+	  <m:gt/>
+	  <m:apply>
+	    <m:real/>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	  <m:cn>0</m:cn>
+	</m:apply>
+      </m:math>) and 
+       <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci>
+      </m:math> and 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci> 
+      </m:math> to have highpass responses (passband where 
+      <m:math>
+	<m:apply>
+	  <m:lt/>
+	  <m:apply>
+	    <m:real/>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	  <m:cn>0</m:cn>
+	</m:apply>
+      </m:math>), is with the following relations:
+
+      <equation id="eq26a">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:power/>
+		<m:ci>z</m:ci>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>k</m:ci>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation> and 
+
+      <equation id="eq26b">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:power/>
+		<m:ci>z</m:ci>
+		<m:ci>k</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      where <m:math><m:ci>k</m:ci></m:math> must be odd so that:
+
+      <m:math display="block">
+	<m:apply>
+	  <m:eq/>
+	  <m:apply>
+	    <m:plus/>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	  <m:apply>
+	    <m:plus/>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:power/>
+		<m:ci>z</m:ci>
+		<m:ci>k</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:power/>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>k</m:ci>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	  <m:cn>0</m:cn>
+	</m:apply>
+      </m:math>
+    
+      Now define the lowpass product filter:
+
+      <equation id="eq27">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">P</m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      and substitute relations <link target-id="eq26a" strength="2"/> and
+      <link target-id="eq26b" strength="2"/> into identity <link target-id="eq24" strength="2"/> to get:
+
+      <equation id="eq28">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:plus/>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:plus/>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		  </m:ci>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:plus/>
+	      <m:apply>
+		<m:ci type="fn">P</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">P</m:ci>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:cn>2</m:cn>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      This requires all 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">P</m:ci>
+	  <m:ci>z</m:ci>
+	</m:apply>
+      </m:math> terms in even powers of
+      <m:math><m:ci>z</m:ci></m:math> to be zero, except the 
+      <m:math>
+	<m:apply>
+	  <m:power/>
+	  <m:ci>z</m:ci>
+	  <m:cn>0</m:cn>
+	</m:apply>
+      </m:math> term which should be 1. The 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">P</m:ci>
+	  <m:ci>z</m:ci>
+	</m:apply>
+      </m:math> terms in odd powers of <m:math><m:ci>z</m:ci></m:math>
+      may take any desired values since they cancel out in <link target-id="eq28" strength="2"/>.
+    </para>
+
+    <para id="para4">
+      A further constraint on 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">P</m:ci>
+	  <m:ci>z</m:ci>
+	</m:apply>
+      </m:math> is that it should be zero phase, in order to minimise
+      the visibility of any distortions due to the high-band being
+      quantised to zero. Hence 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">P</m:ci>
+	  <m:ci>z</m:ci>
+	</m:apply>
+      </m:math> should be of the form: 
+
+      <equation id="eq29">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">P</m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:plus/>
+	      <m:ci>…</m:ci>
+	      <m:apply>
+		<m:times/>
+		<m:ci>
+		  <m:msub><m:mi>p</m:mi><m:mn>5</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>z</m:ci>
+		  <m:cn>5</m:cn>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:ci>
+		  <m:msub><m:mi>p</m:mi><m:mn>3</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>z</m:ci>
+		  <m:cn>3</m:cn>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:ci>
+		  <m:msub><m:mi>p</m:mi><m:mn>1</m:mn></m:msub>
+		</m:ci>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:cn>1</m:cn>
+	      <m:apply>
+		<m:times/>
+		<m:ci>
+		  <m:msub><m:mi>p</m:mi><m:mn>1</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>z</m:ci>
+		  <m:cn>-1</m:cn>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:ci>
+		  <m:msub><m:mi>p</m:mi><m:mn>3</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>z</m:ci>
+		  <m:cn>-3</m:cn>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:ci>
+		  <m:msub><m:mi>p</m:mi><m:mn>5</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>z</m:ci>
+		  <m:cn>-5</m:cn>
+		</m:apply>
+	      </m:apply>
+	      <m:ci>…</m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      The design of a set of PR filters 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math>, 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci>
+      </m:math> and 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math>, 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci>
+      </m:math> can now be summarised as:
+
+      <list id="list1" list-type="enumerated">
+	<item>
+	  Choose a set of coefficients 
+	  <m:math>
+	    <m:ci>
+	      <m:msub><m:mi>p</m:mi><m:mn>1</m:mn></m:msub>
+	    </m:ci>
+	  </m:math>, 
+	  <m:math>
+	    <m:ci>
+	      <m:msub><m:mi>p</m:mi><m:mn>3</m:mn></m:msub>
+	    </m:ci>
+	  </m:math>, 
+	  <m:math>
+	    <m:ci>
+	      <m:msub><m:mi>p</m:mi><m:mn>5</m:mn></m:msub>
+	    </m:ci>
+	  </m:math> … to give a zero-phase lowpass product
+	  filter 
+	  <m:math>
+	    <m:apply>
+	      <m:ci type="fn">P</m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	  </m:math> with desirable characteristics. (This is
+	  non-trivial and is discussed below.)
+	</item>
+
+	<item>
+	  Factorize 
+	  <m:math>
+	    <m:apply>
+	      <m:ci type="fn">P</m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply> 
+	  </m:math> into 
+	  <m:math>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	  </m:math> and 
+	  <m:math>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	  </m:math>, preferably so that the two filters have similar
+	  lowpass frequency responses.
+	</item>
+
+	<item>
+	  Calculate 
+	  <m:math>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	  </m:math> and 
+	  <m:math>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	  </m:math> from <link target-id="eq26a" strength="2"/> and <link target-id="eq26b" strength="2"/>.
+	</item>
+      </list>
+
+      It can help to simplify the tasks of choosing 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">P</m:ci>
+	  <m:ci>z</m:ci>
+	</m:apply> 
+      </m:math> and factorising it if, based on the zero-phase
+      requirement, we transform 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">P</m:ci>
+	  <m:ci>z</m:ci>
+	</m:apply> 
+      </m:math> into 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">
+	    <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	  </m:ci>
+	  <m:ci>Z</m:ci>
+	</m:apply>
+      </m:math> such that:
+
+      <equation id="eq30">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">P</m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	      </m:ci>
+	      <m:ci>Z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:plus/>
+	      <m:cn>1</m:cn>
+	      <m:apply>
+		<m:times/>
+		<m:ci>
+		  <m:msub><m:mi>p</m:mi>
+		    <m:mrow>
+		      <m:mi>t</m:mi>
+		      <m:mo>,</m:mo>
+		      <m:mn>1</m:mn>
+		    </m:mrow>
+		  </m:msub>
+		</m:ci>
+		<m:ci>Z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:ci>
+		  <m:msub><m:mi>p</m:mi>
+		    <m:mrow>
+		      <m:mi>t</m:mi>
+		      <m:mo>,</m:mo>
+		      <m:mn>3</m:mn>
+		    </m:mrow>
+		  </m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>Z</m:ci>
+		  <m:cn>3</m:cn>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:ci>
+		  <m:msub><m:mi>p</m:mi>
+		    <m:mrow>
+		      <m:mi>t</m:mi>
+		      <m:mo>,</m:mo>
+		      <m:mn>5</m:mn>
+		    </m:mrow>
+		  </m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>Z</m:ci>
+		  <m:cn>5</m:cn>
+		</m:apply>
+	      </m:apply>
+	      <m:ci>…</m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      where 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>Z</m:ci>
+	  <m:apply>
+	    <m:times/>
+	    <m:apply>
+	      <m:divide/>
+	      <m:cn>1</m:cn>
+	      <m:cn>2</m:cn>
+	    </m:apply>
+	    <m:apply>
+	      <m:plus/>
+	      <m:ci>z</m:ci>
+	      <m:apply>
+		<m:inverse/>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:apply>
+      </m:math>. To calculate the frequency response of 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	</m:ci>
+      </m:math>, let 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>z</m:ci>
+	  <m:apply>
+	    <m:exp/>
+	    <m:apply>
+	      <m:times/>
+	      <m:imaginaryi/>
+	      <m:ci>ω</m:ci>
+	      <m:ci>
+		<m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+	      </m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:apply>
+      </m:math>: therefore, 
+
+      <equation id="eq31">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>Z</m:ci>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:exp/>
+		  <m:apply>
+		    <m:times/>
+		    <m:imaginaryi/>
+		    <m:ci>ω</m:ci>
+		    <m:ci>
+		      <m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+		    </m:ci>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:exp/>
+		  <m:apply>
+		    <m:minus/>
+		    <m:apply>
+		      <m:times/>
+		      <m:imaginaryi/>
+		      <m:ci>ω</m:ci>
+		      <m:ci>
+			<m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+		      </m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:cos/>
+	      <m:apply>
+		<m:times/>
+		<m:ci>ω</m:ci>
+		<m:ci>
+		  <m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+		</m:ci>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      This is a purely real function of
+      <m:math><m:ci>ω</m:ci></m:math>, varying from 1 at 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>ω</m:ci>
+	  <m:cn>0</m:cn>
+	</m:apply>
+      </m:math> to -1 at 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:apply>
+	    <m:times/>
+	    <m:ci>ω</m:ci>
+	    <m:ci>
+	      <m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+	    </m:ci>
+	  </m:apply>
+	  <m:pi/>
+	</m:apply>
+      </m:math> (half the sampling frequency).
+    </para>
+
+    <para id="para5">
+      A Belgian mathematician, Ingrid Daubechies, did much pioneering
+      work on wavelets in the 1980s. She discovered that to achieve
+      smooth wavelets after many levels of the binary tree, the
+      lowpass filters 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">
+	    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	  <m:ci>z</m:ci>
+	</m:apply>
+      </m:math> and 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">
+	    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	  <m:ci>z</m:ci>
+	</m:apply>
+      </m:math> must both have a number of zeros at half the sampling
+      frequency (at 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>z</m:ci>
+	  <m:cn>-1</m:cn>
+	</m:apply>
+      </m:math>). These will also be zeros of 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">P</m:ci>
+	  <m:ci>z</m:ci>
+	</m:apply>
+      </m:math>, and so 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">
+	    <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	  </m:ci>
+	  <m:ci>z</m:ci>
+	</m:apply>
+      </m:math> will have zeros at 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>Z</m:ci>
+	  <m:cn>-1</m:cn>
+	</m:apply>
+      </m:math>.
+    </para>
+
+    <para id="para6">
+      The simplest case is a single zero at 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>Z</m:ci>
+	  <m:cn>-1</m:cn>
+	</m:apply>
+      </m:math>, so that 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	    </m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	  <m:apply>
+	    <m:plus/>
+	    <m:cn>1</m:cn>
+	    <m:ci>Z</m:ci>
+	  </m:apply>
+	</m:apply>
+      </m:math>. Therefore, 
+      
+      <m:math display="block">
+	<m:apply>
+	  <m:eq/>
+	  <m:apply>
+	    <m:ci type="fn">P</m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	  <m:apply>
+	    <m:times/>
+	    <m:apply>
+	      <m:divide/>
+	      <m:cn>1</m:cn>
+	      <m:cn>2</m:cn>
+	    </m:apply>
+	    <m:apply>
+	      <m:plus/>
+	      <m:ci>z</m:ci>
+	      <m:cn>2</m:cn>
+	      <m:apply>
+		<m:inverse/>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	  <m:apply>
+	    <m:times/>
+	    <m:apply>
+	      <m:divide/>
+	      <m:cn>1</m:cn>
+	      <m:cn>2</m:cn>
+	    </m:apply>
+	    <m:apply>
+	      <m:plus/>
+	      <m:ci>z</m:ci>
+	      <m:cn>1</m:cn>
+	    </m:apply>
+	    <m:apply>
+	      <m:plus/>
+	      <m:cn>1</m:cn>
+	      <m:apply>
+		<m:inverse/>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	  <m:apply>
+	    <m:times/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:apply>
+      </m:math>
+
+      which gives the familiar Haar filters.
+    </para>
+
+    <para id="para7">
+      As we have seen, the Haar wavelets have significant
+      discontinuities so we need to add more zeros at 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>Z</m:ci>
+	  <m:cn>-1</m:cn>
+	</m:apply>
+      </m:math>. However to maintain PR, we must also ensure that all
+      terms in even powers of <m:math><m:ci>Z</m:ci></m:math> are
+      zero, so the next more complicated 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	</m:ci>
+      </m:math> must be of the form:
+
+      <equation id="eq32">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:power/>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:ci>Z</m:ci>
+		</m:apply>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:cn>1</m:cn>
+		<m:apply>
+		  <m:times/>
+		  <m:ci>α</m:ci>
+		  <m:ci>Z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:plus/>
+	      <m:cn>1</m:cn>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>2</m:cn>
+		  <m:ci>α</m:ci>
+		</m:apply>
+		<m:ci>Z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:times/>
+		    <m:cn>2</m:cn>
+		    <m:ci>α</m:ci>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>Z</m:ci>
+		  <m:cn>2</m:cn>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:ci>α</m:ci>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>Z</m:ci>
+		  <m:cn>3</m:cn>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>	      
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      if 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>α</m:ci>
+	  <m:apply>
+	    <m:minus/>
+	    <m:apply>
+	      <m:divide/>
+	      <m:cn>1</m:cn>
+	      <m:cn>2</m:cn>
+	    </m:apply>
+	  </m:apply>
+	</m:apply>
+      </m:math> to suppress the term in 
+      <m:math>
+	<m:apply>
+	  <m:power/>
+	  <m:ci>Z</m:ci>
+	  <m:cn>2</m:cn>
+	</m:apply>
+      </m:math>, 
+
+      <m:math display="block">
+	<m:apply>
+	  <m:eq/>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	    </m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	  <m:apply>
+	    <m:minus/>
+	    <m:apply>
+	      <m:plus/>
+	      <m:cn>1</m:cn>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>3</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:ci>Z</m:ci>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:power/>
+		<m:ci>Z</m:ci>
+		<m:cn>3</m:cn>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:apply>
+      </m:math>
+    </para>
+
+    <para id="para8">
+      If we allocate the factors of
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	</m:ci>
+      </m:math> such that (
+      <m:math>
+	<m:apply>
+	  <m:plus/>
+	  <m:cn>1</m:cn>
+	  <m:ci>Z</m:ci>
+	</m:apply>
+      </m:math>) gives 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math> and 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:apply>
+	    <m:plus/>
+	    <m:cn>1</m:cn>
+	    <m:ci>Z</m:ci>
+	  </m:apply>
+	  <m:apply>
+	    <m:plus/>
+	    <m:cn>1</m:cn>
+	    <m:apply>
+	      <m:times/>
+	      <m:ci>α</m:ci>
+	      <m:ci>Z</m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:apply>
+      </m:math> gives 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math>, we get:
+
+      <equation id="eq33a">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:ci>z</m:ci>
+		<m:cn>2</m:cn>
+		<m:apply>
+		  <m:inverse/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      <equation id="eq33b">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:cn>8</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:ci>z</m:ci>
+		<m:cn>2</m:cn>
+		<m:apply>
+		  <m:inverse/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:minus/>
+		<m:apply>
+		  <m:plus/>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		  <m:cn>4</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:inverse/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>8</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:minus/>
+		  <m:apply>
+		    <m:plus/>
+		    <m:apply>
+		      <m:minus/>
+		      <m:apply>
+			<m:power/>
+			<m:ci>z</m:ci>
+			<m:cn>2</m:cn>
+		      </m:apply>
+		    </m:apply>
+		    <m:apply>
+		      <m:times/>
+		      <m:cn>2</m:cn>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		    <m:cn>6</m:cn>
+		    <m:apply>
+		      <m:times/>
+		      <m:cn>2</m:cn>
+		      <m:apply>
+			<m:inverse/>
+			<m:ci>z</m:ci>
+		      </m:apply>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:power/>
+		    <m:ci>z</m:ci>
+		    <m:cn>-2</m:cn>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      Using <link target-id="eq26a" strength="2"/> and <link target-id="eq26b" strength="2"/> with 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>k</m:ci>
+	  <m:cn>1</m:cn>
+	</m:apply>
+      </m:math>, the corresponding highpass filters then become: 
+
+      <equation id="eq34a">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply> 
+	    <m:apply>
+	      <m:times/>
+	      <m:ci>z</m:ci>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply> 
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:ci>z</m:ci>
+	      <m:apply>
+		<m:minus/>
+		<m:apply>
+		  <m:plus/>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:inverse/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+      
+      <equation id="eq34b">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply> 
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:inverse/>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply> 
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:cn>8</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:inverse/>
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:minus/>
+		<m:apply>
+		  <m:minus/>
+		  <m:apply>
+		    <m:plus/>
+		    <m:apply>
+		      <m:minus/>
+		      <m:apply>
+			<m:minus/>
+			<m:apply>
+			  <m:power/>
+			  <m:ci>z</m:ci>
+			  <m:cn>2</m:cn>
+			</m:apply>
+		      </m:apply>
+		      <m:apply>
+			<m:times/>
+			<m:cn>2</m:cn>
+			<m:ci>z</m:ci>
+		      </m:apply>
+		    </m:apply>
+		    <m:cn>6</m:cn>
+		  </m:apply>
+		  <m:apply>
+		    <m:times/>
+		    <m:cn>2</m:cn>
+		    <m:apply>
+		      <m:inverse/>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>z</m:ci>
+		  <m:cn>-2</m:cn>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      This is often known as the <term>LeGall 3,5-tap filter
+      set</term>, since it was first published in the context of
+      2-band filter banks by Didier LeGall in 1988.
+    </para>
+
+    <para id="para9">
+      The wavelets of the LeGall 3,5-tap filters, 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math> and 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci>
+      </m:math> above, and their frequency responses are shown in
+      <link target-id="figure6" strength="2"/>. The scaling function
+      (bottom left) converges to a pure triangular pulse and the
+      wavelets are the superposition of two triangular pulses.
+    </para>
+    
+    
+    <figure id="figure6">
+      <media id="idm2376496" alt=""><image src="../../media/figure6-99db.png" mime-type="image/png"/></media>
+      <caption>Impulse responses and frequency responses of the
+	4-level tree of LeGall 3,5-tap filters.
+      </caption>
+    </figure>
+    
+    
+    <para id="para10">
+      The triangular scaling function produces linear interpolation
+      between consecutive lowband coefficients and also causes the
+      wavelets to be linear interpolations of the coefficients of the 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci>
+      </m:math> filter, -1, -2, 6, -2, -1 (scaled appropriately).
+    </para>
+    
+    <para id="para11">
+      These wavelets have quite desirable properties for image
+      compression (note the absence of waveform discontinuities and
+      the much lower sidelobes of the frequency responses), and they
+      represent probably the simplest useful wavelet
+      design. Unfortunately there is one drawback -- the inverse
+      wavelets are not very good. These are formed from the LeGall
+      5,3-tap filter pair, 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math> and 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci>
+      </m:math> above, whose wavelets and frequency responses are
+      shown in <link target-id="figure7" strength="2"/>.
+    </para>
+
+    <figure id="figure7">
+      <media id="idm8493504" alt=""><image src="../../media/figure7-966a.png" mime-type="image/png"/></media>
+      <caption>Impulse responses and frequency responses of the
+      4-level tree of LeGall 5,3-tap filters.
+      </caption>
+    </figure>
+
+    <para id="para12">
+      The main problem is that the wavelets do not converge after many
+      levels to a smooth function and hence the frequency responses
+      have large unwanted sidelobes. The jaggedness of the scaling
+      function and wavelets causes highly visible coding artefacts if
+      these filters are used for reconstruction of a compressed image.
+    </para>
+
+    <para id="para13">
+      However the allocation of the factors of 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">
+	    <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	  </m:ci>
+	  <m:ci>Z</m:ci>
+	</m:apply>
+      </m:math> to 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math> and 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math> is a free design choice, so we may swap the factors
+      (and hence swap <m:math><m:ci>G</m:ci></m:math> and
+      <m:math><m:ci>H</m:ci></m:math>) in order that the smoother
+      3,5-tap filters become 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	</m:ci>
+      </m:math>, 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+	</m:ci>
+      </m:math> and are used for reconstruction. We shall show later
+      that this leads to a good low-complexity solution for image
+      compression and that the jaggedness of the analysis filters is
+      not critical.
+    </para>
+
+    <para id="para14">
+      Unbalance between analysis and reconstruction filters / wavelets
+      is nevertheless often regarded as being undesirable,
+      particularly as it prevents the filtering process from being
+      represented as an orthonormal transformation of the input signal
+      (since an orthonormally transformed signal may be reconstructed
+      simply by transposing the transform matrix). An unbalanced PR
+      filter system is often termed a <term>bi-orthogonal
+      transformation</term>.
+    </para>
+
+    <para id="para15">
+      We now consider ways to reduce this unbalance. 
+    </para>
+
+    <section id="sec1">
+      <title>Filters with balanced H and G frequency responses (but
+      non-linear phase responses) - Daubechies wavelets:</title>
+
+      <para id="sec1para1">
+	In the above analysis, we used the factorisation of 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	    </m:ci>
+	    <m:ci>Z</m:ci>
+	  </m:apply>
+	</m:math> to give us 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math> and 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math>. This always gives unbalanced factors if terms of 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	  </m:ci>
+	</m:math> in even powers of <m:math><m:ci>Z</m:ci></m:math>
+	are zero.
+      </para>
+
+      <para id="sec1para2">
+	However each of these factors in
+	<m:math><m:ci>Z</m:ci></m:math> may itself be factorised into
+	a pair of factors in <m:math><m:ci>z</m:ci></m:math>, since: 
+
+	<equation id="eq35">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:plus/>
+		  <m:apply>
+		    <m:times/>
+		    <m:ci>α</m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		  <m:cn>1</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:times/>
+		    <m:ci>α</m:ci>
+		    <m:apply>
+		      <m:inverse/>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:times/>
+		  <m:ci>α</m:ci>
+		  <m:ci>z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:power/>
+		    <m:ci>α</m:ci>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:ci>α</m:ci>
+		  <m:apply>
+		    <m:inverse/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:power/>
+		    <m:ci>α</m:ci>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:cn>2</m:cn>
+		  <m:ci>α</m:ci>
+		  <m:ci>Z</m:ci>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:power/>
+		    <m:ci>α</m:ci>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:times/>
+		    <m:ci>β</m:ci>
+		    <m:ci>Z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	where 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>β</m:ci>
+	    <m:apply>
+	      <m:divide/>
+	      <m:apply>
+		<m:times/>
+		<m:cn>2</m:cn>
+		<m:ci>α</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:cn>1</m:cn>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>α</m:ci>
+		  <m:cn>2</m:cn>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>. 
+      </para>
+
+      <para id="sec1para3">
+	For each factor of 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	    </m:ci>
+	    <m:ci>Z</m:ci>
+	  </m:apply>
+	</m:math>, we may allocate one of its
+	<m:math><m:ci>z</m:ci></m:math> subfactors to 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	    </m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math> and the other to 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	    </m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math>. Where roots of 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	    </m:ci>
+	    <m:ci>Z</m:ci>
+	  </m:apply>
+	</m:math> are complex, the subfactors must be allocated in
+	conjugate pairs so that 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math> and 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math> remain purely real.
+      </para>
+
+      <para id="sec1para4">
+	Since the subfactors occur in reciprocal pairs (roots at 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>z</m:ci>
+	    <m:ci>α</m:ci>
+	  </m:apply>
+	</m:math> and 
+	<m:math>
+	  <m:apply>
+	    <m:inverse/>
+	    <m:ci>α</m:ci>
+	  </m:apply>
+	</m:math>), we find that 
+	
+	<equation id="eq36">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci> 
+		<m:ci>z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci> 
+		<m:apply>
+		  <m:inverse/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation> 
+
+	which means that the impulse response of 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci> 
+	</m:math> is the time-reverse of 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci> 
+	</m:math>.
+      </para>
+
+      <para id="sec1para5">
+	Therefore the frequency responses are related by 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	      </m:ci> 
+	      <m:apply>
+		<m:exp/>
+		<m:apply>
+		  <m:times/>
+		  <m:imaginaryi/>
+		  <m:ci>ω</m:ci>
+		  <m:ci>
+		    <m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+		  </m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	      </m:ci> 
+	      <m:apply>
+		<m:exp/>
+		<m:apply>
+		  <m:minus/>
+		  <m:apply>
+		    <m:times/>
+		    <m:imaginaryi/>
+		    <m:ci>ω</m:ci>
+		    <m:ci>
+		      <m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+		    </m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>  
+	    </m:apply>
+	  </m:apply>
+	</m:math>. 
+      </para>
+
+      <para id="sec1para6">
+	Hence the magnitudes of the frequency responses are the same,
+	and their phases are opposite. It may be shown that this is
+	sufficient to obtain <emphasis>orthogonal</emphasis> wavelets,
+	but unfortunately the separate filters are no longer zero (or
+	linear) phase. (Linear phase is zero phase with an arbitrary
+	delay
+	<m:math>
+	  <m:apply>
+	    <m:power/>
+	    <m:ci>z</m:ci>
+	    <m:apply>
+	      <m:minus/>
+	      <m:ci>k</m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:math>.) 
+      </para>
+
+      <para id="sec1para7">
+	Daubechies wavelets may be generated in this way, with the
+	added constraint that the maximum number of zeros of 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	    </m:ci>
+	    <m:ci>Z</m:ci>
+	  </m:apply>
+	</m:math> are placed at 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>Z</m:ci>
+	    <m:cn>-1</m:cn>
+	  </m:apply>
+	</m:math> (producing pairs of zeros of 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">P</m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math> at 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>z</m:ci>
+	    <m:cn>-1</m:cn>
+	  </m:apply>
+	</m:math>), consistent with terms in even powers of
+	<m:math><m:ci>Z</m:ci></m:math> being zero.
+      </para>
+
+      <para id="sec1para8">
+	If 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	    </m:ci>
+	    <m:ci>Z</m:ci>
+	  </m:apply>
+	</m:math> is of order 
+	<m:math>
+	  <m:apply>
+	    <m:minus/>
+	    <m:apply>
+	      <m:times/>
+	      <m:cn>2</m:cn>
+	      <m:ci>K</m:ci>
+	    </m:apply>
+	    <m:cn>1</m:cn>
+	  </m:apply>
+	</m:math>, then it may have <m:math><m:ci>K</m:ci></m:math>
+	zeros at 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>Z</m:ci>
+	    <m:cn>-1</m:cn>
+	  </m:apply>
+	</m:math> such that 
+
+	<equation id="eq37">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+		</m:ci>
+		<m:ci>Z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:power/>
+		  <m:apply>
+		    <m:plus/>
+		    <m:cn>1</m:cn>
+		    <m:ci>Z</m:ci>
+		  </m:apply>
+		  <m:ci>K</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:ci type="fn">
+		    <m:msub><m:mi>R</m:mi><m:mi>t</m:mi></m:msub>
+		  </m:ci>
+		  <m:ci>Z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	where 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>R</m:mi><m:mi>t</m:mi></m:msub>
+	    </m:ci>
+	    <m:ci>Z</m:ci>
+	  </m:apply>
+	</m:math> is of order 
+	<m:math>
+	  <m:apply>
+	    <m:minus/>
+	    <m:ci>K</m:ci>
+	    <m:cn>1</m:cn>
+	  </m:apply>
+	</m:math> and its 
+	<m:math>
+	  <m:apply>
+	    <m:minus/>
+	    <m:ci>K</m:ci>
+	    <m:cn>1</m:cn>
+	  </m:apply>
+	</m:math> roots may be chosen such that terms of 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	    </m:ci>
+	    <m:ci>Z</m:ci>
+	  </m:apply>
+	</m:math> in the 
+	<m:math>
+	  <m:apply>
+	    <m:minus/>
+	    <m:ci>K</m:ci>
+	    <m:cn>1</m:cn>
+	  </m:apply>
+	</m:math> even powers of <m:math><m:ci>Z</m:ci></m:math> are
+	zero.
+      </para>
+
+      <para id="sec1para9">
+	<link target-id="eq32" strength="2"/> is the 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>K</m:ci>
+	    <m:cn>2</m:cn>
+	  </m:apply>
+	</m:math> solution to <link target-id="eq37" strength="2"/>. Therefore, 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>R</m:mi><m:mi>t</m:mi></m:msub>
+	      </m:ci>
+	      <m:ci>Z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:minus/>
+	      <m:cn>1</m:cn>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>2</m:cn>
+		</m:apply>
+		<m:ci>Z</m:ci>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math> so 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>β</m:ci>
+	    <m:apply>
+	      <m:minus/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math> and, from <link target-id="eq35" strength="2"/>, the
+	factors of 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">R</m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math> are 
+	
+	<m:math display="block">
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">R</m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:divide/>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:plus/>
+		  <m:apply>
+		    <m:times/>
+		    <m:ci>α</m:ci>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		  <m:cn>1</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:times/>
+		    <m:ci>α</m:ci>
+		    <m:apply>
+		      <m:inverse/>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:cn>1</m:cn>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>α</m:ci>
+		  <m:cn>2</m:cn>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+
+	where 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>α</m:ci>
+	    <m:apply>
+	      <m:minus/>
+	      <m:apply>
+		<m:root/>
+		<m:cn>3</m:cn>
+	      </m:apply>
+	      <m:cn>2</m:cn>
+	    </m:apply>
+	  </m:apply>
+	</m:math>. Also 
+
+	<m:math display="block">
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:power/>
+	      <m:apply>
+		<m:plus/>
+		<m:cn>1</m:cn>
+		<m:ci>Z</m:ci>
+	      </m:apply>
+	      <m:cn>2</m:cn>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:power/>
+		<m:apply>
+		  <m:plus/>
+		  <m:ci>Z</m:ci>
+		  <m:cn>1</m:cn>		
+		</m:apply>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:power/>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:inverse/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+
+	Hence 
+	<m:math display="block">
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:apply>
+		  <m:times/>
+		  <m:cn>2</m:cn>
+		  <m:apply>
+		    <m:root/>
+		    <m:apply>
+		      <m:plus/>
+		      <m:cn>1</m:cn>
+		      <m:apply>
+			<m:power/>
+			<m:ci>α</m:ci>
+			<m:cn>2</m:cn>
+		      </m:apply>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:power/>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:inverse/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:cn>1</m:cn>
+		<m:apply>
+		  <m:times/>
+		  <m:ci>α</m:ci>
+		  <m:apply>
+		    <m:inverse/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:minus/>
+	      <m:apply>
+		<m:plus/>
+		<m:cn>0.4830</m:cn>
+		<m:apply>
+		  <m:times/>
+		  <m:cn>0.8365</m:cn>
+		  <m:apply>
+		    <m:inverse/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:cn>0.2241</m:cn>
+		  <m:apply>
+		    <m:power/>
+		    <m:ci>z</m:ci>
+		    <m:cn>-2</m:cn>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:cn>0.1294</m:cn>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>z</m:ci>
+		  <m:cn>-3</m:cn>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+
+	and 
+	
+	<m:math display="block">
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:ci type="fn">
+		<m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>z</m:ci>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:power/>
+		<m:ci>z</m:ci>
+		<m:cn>-3</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:power/>
+		<m:ci>z</m:ci>
+		<m:cn>-3</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:minus/>
+		  <m:apply>
+		    <m:inverse/>
+		    <m:ci>z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:plus/>
+	      <m:apply>
+		<m:minus/>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>0.1294</m:cn>
+		  <m:apply>
+		    <m:times/>
+		    <m:cn>0.2241</m:cn>
+		    <m:apply>
+		      <m:inverse/>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:cn>0.8365</m:cn>
+		  <m:apply>
+		    <m:power/>
+		    <m:ci>z</m:ci>
+		    <m:cn>-2</m:cn>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:cn>0.4830</m:cn>
+		<m:apply>
+		  <m:power/>
+		  <m:ci>z</m:ci>
+		  <m:cn>-3</m:cn>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+
+	The wavelets and frequency responses for these filters are
+	shown in <link target-id="figure8" strength="2"/>. It is clear
+	that the wavelets and scaling function are no longer linear
+	phase and are less smooth than those for the LeGall 3,5-tap
+	filters. The frequency responses also show worse
+	sidelobes. The 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math>, 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+	  </m:ci>
+	</m:math> filters give the time reverse of these wavelets and
+	identical frequency responses.
+      </para>
+      
+      <figure id="figure8">
+	<media id="idm9920912" alt=""><image src="../../media/figure8-94c7.png" mime-type="image/png"/></media>
+	<caption>
+	  Impulse responses and frequency responses of the 4-level
+	  tree of Daubechies 4-tap filters.
+	</caption>
+      </figure>
+
+      <para id="sec1para10">
+	Higher order Daubechies filters achieve smooth wavelets but
+	they still suffer from non-linear phase. This tends to result
+	in more visible coding artefacts than linear phase filters,
+	which distribute any artefacts equally on either side of sharp
+	edges in the image.
+      </para>
+
+      <para id="sec1para11">
+	Linear phase filters also allow an elegant technique, known as
+	symmetric extension, to be used at the outer edges of images,
+	where wavelet filters would otherwise require the size of the
+	transformed image to be increased to allow for convolution
+	with the filters. Symmetric extension assumes that the image
+	is reflected by mirrors at each edge, so that an infinitely
+	tessellated plane of reflected images is generated. Reflections
+	avoid unwanted edge discontinuities. If the filters are linear
+	phase, then the DWT coefficients also form reflections and no
+	increase in size of the transformed image is necessary to
+	accomodate convolution effects.
+      </para>
+    </section>
+
+    <section id="sec2">
+      <title>Filters with linear phase and nearly balanced frequency
+      responses:</title> 
+
+      <para id="sec2para1">
+	To ensure that the filters 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math>, 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>H</m:mi><m:mn>1</m:mn></m:msub>
+	  </m:ci>
+	</m:math> and 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math>, 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>G</m:mi><m:mn>1</m:mn></m:msub>
+	  </m:ci>
+	</m:math> are linear phase, the factors in
+	<m:math><m:ci>Z</m:ci></m:math> must be allocated to 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math> or 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math> as a whole and not be split, as was done for the
+	Daubechies filters. In this way the symmetry between
+	<m:math><m:ci>z</m:ci></m:math> and 
+	<m:math>
+	  <m:apply>
+	    <m:inverse/>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math> is preserved in all filters.
+      </para>
+
+      <para id="sec2para2">
+	Perfect balance of frequency responses between 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math> and  
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	  </m:ci>
+	</m:math> is then not possible, if PR is preserved, but we
+	have found a factorisation of
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	    </m:ci>
+	    <m:ci>Z</m:ci>
+	  </m:apply>
+	</m:math> which achieves near balance of the responses.
+      </para>
+
+      <para id="sec2para3">
+	This is: 
+
+	<equation id="eq38">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+		</m:ci>
+		<m:ci>Z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:ci>Z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:times/>
+		    <m:ci>a</m:ci>
+		    <m:ci>Z</m:ci>
+		  </m:apply>
+		  <m:apply>
+		    <m:times/>
+		    <m:ci>b</m:ci>
+		    <m:apply>
+		      <m:power/>
+		      <m:ci>Z</m:ci>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:ci>Z</m:ci>
+		</m:apply>
+		<m:apply>
+		  <m:plus/>
+		  <m:cn>1</m:cn>
+		  <m:apply>
+		    <m:times/>
+		    <m:ci>c</m:ci>
+		    <m:ci>Z</m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	This is a 
+	<m:math>
+	  <m:ci>
+	    <m:msup><m:mn>5</m:mn><m:mi>th</m:mi></m:msup>
+	  </m:ci>
+	</m:math> order polynomial, and if the terms in 
+	<m:math>
+	  <m:apply>
+	    <m:power/>
+	    <m:ci>Z</m:ci>
+	    <m:cn>2</m:cn>
+	  </m:apply>
+	</m:math> and 
+	<m:math>
+	  <m:apply>
+	    <m:power/>
+	    <m:ci>Z</m:ci>
+	    <m:cn>4</m:cn>
+	  </m:apply>
+	</m:math> are to be zero, there are two constraints on the 3 unknowns 
+	<m:math>
+	  <m:list>
+	    <m:ci>a</m:ci>
+	    <m:ci>b</m:ci>
+	    <m:ci>c</m:ci>
+	  </m:list>
+	</m:math> so that one of them (say
+	<m:math><m:ci>c</m:ci></m:math>) may be regarded as a free
+	parameter. These constraints require that:
+
+	<equation id="eq39a">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci>a</m:ci>
+	      <m:apply>
+		<m:minus/>
+		<m:apply>
+		  <m:divide/>
+		  <m:apply>
+		    <m:power/>
+		    <m:apply>
+		      <m:plus/>
+		      <m:cn>1</m:cn>
+		      <m:apply>
+			<m:times/>
+			<m:cn>2</m:cn>
+			<m:ci>c</m:ci>
+		      </m:apply>
+		    </m:apply>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		  <m:apply>
+		    <m:times/>
+		    <m:cn>2</m:cn>
+		    <m:apply>
+		      <m:power/>
+		      <m:apply>
+			<m:plus/>
+			<m:cn>1</m:cn>
+			<m:ci>c</m:ci>
+		      </m:apply>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation> and 
+
+	<equation id="eq39b">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci>b</m:ci>
+	      <m:apply>
+		<m:divide/>
+		<m:apply>
+		  <m:times/>
+		  <m:ci>c</m:ci>
+		  <m:apply>
+		    <m:plus/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:times/>
+		      <m:cn>2</m:cn>
+		      <m:ci>c</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:cn>2</m:cn>
+		  <m:apply>
+		    <m:power/>
+		    <m:apply>
+		      <m:plus/>
+		      <m:cn>1</m:cn>
+		      <m:ci>c</m:ci>
+		    </m:apply>
+		    <m:cn>2</m:cn>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+		
+	<m:math><m:ci>c</m:ci></m:math> may then be adjusted to give
+	maximum similarity between the left and right pairs of factors
+	in <link target-id="eq38" strength="2"/> as
+	<m:math><m:ci>Z</m:ci></m:math> varies from 1 to -1 (
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:ci>ω</m:ci>
+	    <m:ci>
+	      <m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+	    </m:ci>
+	  </m:apply>
+	</m:math> varies from 0 to <m:math><m:pi/></m:math>).
+      </para>
+
+      <para id="sec2para4">
+	It turns out that 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>c</m:ci>
+	    <m:apply>
+	      <m:minus/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>2</m:cn>
+		<m:cn>7</m:cn>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math> gives good similarity and when substituted into
+	<link target-id="eq39a" strength="2"/>, <link target-id="eq39b" strength="2"/> and <link target-id="eq38" strength="2"/> gives:
+
+	<equation id="eq40">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:apply>
+		<m:ci type="fn">
+		  <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+		</m:ci>
+		<m:ci>Z</m:ci>
+	      </m:apply>
+	      <m:apply>
+		<m:times/>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>50</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:minus/>
+		  <m:apply>
+		    <m:minus/>
+		    <m:apply>
+		      <m:plus/>
+		      <m:cn>50</m:cn>
+		      <m:apply>
+			<m:times/>
+			<m:cn>41</m:cn>
+			<m:ci>Z</m:ci>
+		      </m:apply>
+		    </m:apply>
+		    <m:apply>
+		      <m:times/>
+		      <m:cn>15</m:cn>
+		      <m:apply>
+			<m:power/>
+			<m:ci>Z</m:ci>
+			<m:cn>2</m:cn>
+		      </m:apply>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:times/>
+		    <m:cn>6</m:cn>
+		    <m:apply>
+		      <m:power/>
+		      <m:ci>Z</m:ci>
+		      <m:cn>3</m:cn>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:divide/>
+		  <m:cn>1</m:cn>
+		  <m:cn>7</m:cn>
+		</m:apply>
+		<m:apply>
+		  <m:minus/>
+		  <m:apply>
+		    <m:plus/>
+		    <m:cn>7</m:cn>
+		    <m:apply>
+		      <m:times/>
+		      <m:cn>5</m:cn>
+		      <m:ci>Z</m:ci>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:times/>
+		    <m:cn>2</m:cn>
+		    <m:apply>
+		      <m:power/>
+		      <m:ci>Z</m:ci>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>	      
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	We get 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>G</m:mi><m:mn>0</m:mn></m:msub>
+	    </m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math> and 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>H</m:mi><m:mn>0</m:mn></m:msub>
+	    </m:ci>
+	    <m:ci>z</m:ci>
+	  </m:apply>
+	</m:math> by substituting 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>Z</m:ci>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:ci>z</m:ci>
+		<m:apply>
+		  <m:inverse/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math> into these two polynomial factors. This results in
+	5,7-tap filters whose wavelets and frequency responses are
+	shown in <link target-id="figure9" strength="2"/>.
+      </para>
+
+      <figure id="figure9">
+	<media id="idp130096" alt=""><image src="../../media/figure9-3018.png" mime-type="image/png"/></media>
+	<caption>
+	  Impulse responses and frequency responses of the 4-level
+	  tree of near-balanced 5,7-tap filters.
+	</caption>
+      </figure>
+
+      <para id="sec2para5">
+	The near balance of the responses may be seen from <link target-id="figure10" strength="2"/> which shows the alternative
+	7,5-tap versions (i.e. with <m:math><m:ci>H</m:ci></m:math>
+	and <m:math><m:ci>G</m:ci></m:math> swapped). It is quite
+	difficult to spot the minor differences between these figures.
+      </para>
+
+      <figure id="figure10">
+	<media id="idm8337872" alt=""><image src="../../media/figure10-16ac.png" mime-type="image/png"/></media>
+	<caption>
+	  Impulse responses and frequency responses of the 4-level
+	  tree of near-balanced 7,5-tap filters.
+	</caption>
+      </figure>
+    </section>
+
+    <section id="sec3">
+      <title>Smoother Wavelets</title>
+      
+      <para id="sec3para1">
+	In all of the above designs we have used the substitution 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>Z</m:ci>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:ci>z</m:ci>
+		<m:apply>
+		  <m:inverse/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>. However other substitutions may be used to create
+	improved wavelets. To preserve PR, the substitution should
+	contain only odd powers of <m:math><m:ci>z</m:ci></m:math> (so
+	that odd powers of <m:math><m:ci>Z</m:ci></m:math> should
+	produce only odd powers of <m:math><m:ci>z</m:ci></m:math>),
+	and to produce zero phase, the coefficients of the
+	substitution should be symmetric about
+	<m:math>
+	  <m:apply>
+	    <m:power/>
+	    <m:ci>z</m:ci>
+	    <m:cn>0</m:cn>
+	  </m:apply>
+	</m:math>.
+      </para>
+
+      <para id="sec3para2">
+	A substitution, which can give much greater flatness near 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>z</m:ci>
+	    <m:apply>
+	      <m:mo>±</m:mo>
+	      <m:cn>1</m:cn>
+	    </m:apply>
+	  </m:apply>
+	</m:math> while still satisfying 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>Z</m:ci>
+	    <m:apply>
+	      <m:mo>±</m:mo>
+	      <m:cn>1</m:cn>
+	    </m:apply>
+	  </m:apply>
+	</m:math> when 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>z</m:ci>
+	    <m:apply>
+	      <m:mo>±</m:mo>
+	      <m:cn>1</m:cn>
+	    </m:apply>
+	  </m:apply>
+	</m:math>, is: 
+
+	<equation id="eq41">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci>Z</m:ci>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:times/>
+		  <m:ci>p</m:ci>
+		  <m:apply>
+		    <m:power/>
+		    <m:ci>z</m:ci>
+		    <m:cn>3</m:cn>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:minus/>
+		    <m:apply>
+		      <m:divide/>
+		      <m:cn>1</m:cn>
+		      <m:cn>2</m:cn>
+		    </m:apply>
+		    <m:ci>p</m:ci>
+		  </m:apply>
+		  <m:apply>
+		    <m:plus/>
+		    <m:ci>z</m:ci>
+		    <m:apply>
+		      <m:inverse/>
+		      <m:ci>z</m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:ci>p</m:ci>
+		  <m:apply>
+		    <m:power/>
+		    <m:ci>z</m:ci>
+		    <m:cn>-3</m:cn>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	<m:math><m:ci>Z</m:ci></m:math> then becomes the following
+	function of frequency when
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>z</m:ci>
+	    <m:apply>
+	      <m:exp/>
+	      <m:apply>
+		<m:times/>
+		<m:imaginaryi/>
+		<m:ci>ω</m:ci>
+		<m:ci>
+		  <m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+		</m:ci>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>: 
+
+	<equation id="eq42">
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci>Z</m:ci>
+	      <m:apply>
+		<m:plus/>
+		<m:apply>
+		  <m:times/>
+		  <m:apply>
+		    <m:minus/>
+		    <m:cn>1</m:cn>
+		    <m:apply>
+		      <m:times/>
+		      <m:cn>2</m:cn>
+		      <m:ci>p</m:ci>
+		    </m:apply>
+		  </m:apply>
+		  <m:apply>
+		    <m:cos/>
+		    <m:apply>
+		      <m:times/>
+		      <m:ci>ω</m:ci>
+		      <m:ci>
+			<m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+		      </m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+		<m:apply>
+		  <m:times/>
+		  <m:cn>2</m:cn>
+		  <m:ci>p</m:ci>
+		  <m:apply>
+		    <m:cos/>
+		    <m:apply>
+		      <m:times/>
+		      <m:cn>3</m:cn>
+		      <m:ci>ω</m:ci>
+		      <m:ci>
+			<m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+		      </m:ci>
+		    </m:apply>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>
+	</equation>
+
+	A high degree of flatness (with some ripple) is achieved near 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:apply>
+	      <m:times/>
+	      <m:ci>ω</m:ci>
+	      <m:ci>
+		<m:msub><m:mi>T</m:mi><m:mi>s</m:mi></m:msub>
+	      </m:ci>
+	    </m:apply>
+	    <m:cn>0</m:cn>
+	  </m:apply>
+	</m:math> and <m:math><m:pi/></m:math>, when 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>p</m:ci>
+	    <m:apply>
+	      <m:minus/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>3</m:cn>
+		<m:cn>32</m:cn>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>. This is equivalent to more zeros near 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>z</m:ci>
+	    <m:cn>-1</m:cn>
+	  </m:apply>
+	</m:math> for each (
+	<m:math>
+	  <m:apply>
+	    <m:plus/>
+	    <m:ci>Z</m:ci>
+	    <m:cn>1</m:cn>
+	  </m:apply>
+	</m:math>) factor than when 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>Z</m:ci>
+	    <m:apply>
+	      <m:times/>
+	      <m:apply>
+		<m:divide/>
+		<m:cn>1</m:cn>
+		<m:cn>2</m:cn>
+	      </m:apply>
+	      <m:apply>
+		<m:plus/>
+		<m:ci>z</m:ci>
+		<m:apply>
+		  <m:inverse/>
+		  <m:ci>z</m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math> is used.
+      </para>
+
+      <para id="sec3para3">
+	The 
+	<m:math>
+	  <m:ci>
+	    <m:msup><m:mn>2</m:mn><m:mi>nd</m:mi></m:msup>
+	  </m:ci>
+	</m:math> order factor in 
+	<m:math>
+	  <m:apply>
+	    <m:ci type="fn">
+	      <m:msub><m:mi>P</m:mi><m:mi>t</m:mi></m:msub>
+	    </m:ci>
+	    <m:ci>Z</m:ci>
+	  </m:apply>
+	</m:math> now produces terms from 
+	<m:math>
+	  <m:ci>
+	    <m:msup><m:mi>z</m:mi><m:mn>6</m:mn></m:msup>
+	  </m:ci>
+	</m:math> to 
+	<m:math>
+	  <m:ci>
+	    <m:msup><m:mi>z</m:mi><m:mn>-6</m:mn></m:msup>
+	  </m:ci>
+	</m:math> and the 
+	<m:math>
+	  <m:ci>
+	    <m:msup><m:mn>3</m:mn><m:mi>rd</m:mi></m:msup>
+	  </m:ci>
+	</m:math> order factor produces terms from 
+	<m:math>
+	  <m:ci>
+	    <m:msup><m:mi>z</m:mi><m:mn>9</m:mn></m:msup>
+	  </m:ci>
+	</m:math> to 
+	<m:math>
+	  <m:ci>
+	    <m:msup><m:mi>z</m:mi><m:mn>-9</m:mn></m:msup>
+	  </m:ci>
+	</m:math>. Hence the filters become 13 and 19 tap filters,
+	although 2 taps of each are zero and the outer two taps of the
+	19-tap filter are very small (
+	<m:math>
+	  <m:apply>
+	    <m:mo>≈</m:mo>
+	    <m:apply>
+	      <m:power/>
+	      <m:cn>10</m:cn>
+	      <m:cn>-4</m:cn>
+	    </m:apply>
+	  </m:apply>
+	</m:math>). 
+      </para>
+
+      <para id="sec3para4">
+	<link target-id="figure11" strength="2"/> shows the wavelets and
+	frequency responses of the 13,19-tap filters, obtained by
+	substituting <link target-id="eq41" strength="2"/> into <link target-id="eq40" strength="2"/>. Note the smoother wavelets and
+	scaling function and the much lower sidelobes in the frequency
+	responses from these higher order filters.
+      </para>
+
+      <figure id="figure11">
+	<media id="idm1249888" alt=""><image src="../../media/figure11-a27a.png" mime-type="image/png"/></media>
+	<caption>
+	  Impulse responses and frequency responses of the 4-level
+	  tree of near-balanced 13,19-tap filters.
+	</caption>
+      </figure>
+
+      <para id="sec3para5">
+	<link target-id="figure12" strength="2"/> demonstrates that the
+	near balanced properties of <link target-id="eq40" strength="2"/>
+	are preserved in the high order filters.
+      </para>
+
+      <figure id="figure12">
+	<media id="idm8399472" alt=""><image src="../../media/figure12-9a23.png" mime-type="image/png"/></media>
+	<caption>
+	  Impulse responses and frequency responses of the 4-level
+	  tree of near-balanced 19,13-tap filters.
+	</caption>
+      </figure>
+
+      <para id="sec3para6">
+	There are many other types of wavelets with varying features
+	and complexities, but we have found the examples given to be
+	near optimum for image compression.
+      </para>
+    </section>
+  </content>
+</document>

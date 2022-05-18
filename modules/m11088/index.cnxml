@@ -1,0 +1,384 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>Entropy</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>6b02587b-87ad-4467-95c7-a36ed30584ed</md:uuid>
+</metadata>
+
+
+  <content>
+    <para id="para1">
+      Entropy of source information was discussed in the third-year E5
+      Information and Coding course. For an image
+      <m:math><m:ci>x</m:ci></m:math>, quantised to
+      <m:math><m:ci>M</m:ci></m:math> levels, the entropy 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mi>x</m:mi></m:msub>
+	</m:ci>
+      </m:math> is defined as:
+
+      <equation id="eq5">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>
+	      <m:msub><m:mi>H</m:mi><m:mi>x</m:mi></m:msub>
+	    </m:ci>
+	    <m:apply>
+	      <m:sum/>
+	      <m:bvar><m:ci>i</m:ci></m:bvar>
+	      <m:lowlimit>
+		<m:cn>0</m:cn>
+	      </m:lowlimit>
+	      <m:uplimit>
+		<m:apply>
+		  <m:minus/>
+		  <m:ci>M</m:ci>
+		  <m:cn>1</m:cn>
+		</m:apply>
+	      </m:uplimit>
+	      <m:apply>
+		<m:times/>
+		<m:ci>
+		  <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+		</m:ci>
+		<m:apply>
+		  <m:log/>
+		  <m:logbase>
+		    <m:cn>2</m:cn>
+		  </m:logbase>
+		  <m:apply>
+		    <m:divide/>
+		    <m:cn>1</m:cn>
+		    <m:ci>
+		      <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+		    </m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	    <m:apply>
+	      <m:minus/>
+	      <m:apply>
+		<m:sum/>
+		<m:bvar><m:ci>i</m:ci></m:bvar>
+		<m:lowlimit>
+		  <m:cn>0</m:cn>
+		</m:lowlimit>
+		<m:uplimit>
+		  <m:apply>
+		    <m:minus/>
+		    <m:ci>M</m:ci>
+		    <m:cn>1</m:cn>
+		  </m:apply>
+		</m:uplimit>
+		<m:apply>
+		  <m:times/>
+		  <m:ci>
+		    <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+		  </m:ci>
+		  <m:apply>
+		    <m:log/>
+		    <m:logbase>
+		      <m:cn>2</m:cn>
+		    </m:logbase>
+		    <m:ci>
+		      <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+		    </m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      where 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+	</m:ci>
+      </m:math>, 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>i</m:ci>
+	  <m:cn>0</m:cn>
+	</m:apply>
+      </m:math> to 
+      <m:math>
+	<m:apply>
+	  <m:minus/>
+	  <m:ci>M</m:ci>
+	  <m:cn>1</m:cn>
+	</m:apply>
+      </m:math>, is the probability of the 
+      <m:math>
+	<m:ci>
+	  <m:msup><m:mi>i</m:mi><m:mi>th</m:mi></m:msup>
+	</m:ci>
+      </m:math> quantiser level being used (often obtained from a
+      histogram of the pel intensities).
+    </para>
+
+    <para id="para2">
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>H</m:mi><m:mi>x</m:mi></m:msub>
+	</m:ci>
+      </m:math> represents the mean number of bits per pel with which
+      the quantised image <m:math><m:ci>x</m:ci></m:math> can be
+      represented using an ideal variable-length entropy code. A
+      Huffman code usually approximates this bit-rate quite closely.
+    </para>
+
+    <para id="para3">
+      To obtain the number of bits to code an image (or subimage)
+      <m:math><m:ci>x</m:ci></m:math> containing
+      <m:math><m:ci>N</m:ci></m:math> pels:
+
+      <list id="list1">
+	<item>
+	  A histogram of <m:math><m:ci>x</m:ci></m:math> is measured
+	  using <m:math><m:ci>M</m:ci></m:math> bins corresponding to
+	  the <m:math><m:ci>M</m:ci></m:math> quantiser levels.
+	</item>
+	<item>
+	  The <m:math><m:ci>M</m:ci></m:math> histogram counts are
+	  each divided by <m:math><m:ci>N</m:ci></m:math> to give the
+	  probabilities 
+	  <m:math>
+	    <m:ci>
+	      <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+	    </m:ci>
+	  </m:math>, which are then converted into entropies 
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci>
+		<m:msub><m:mi>h</m:mi><m:mi>i</m:mi></m:msub>
+	      </m:ci>
+	      <m:apply>
+		<m:minus/>
+		<m:apply>
+		  <m:times/>
+		  <m:ci>
+		    <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+		  </m:ci>  
+		  <m:apply>
+		    <m:log/>
+		    <m:logbase>
+		      <m:cn>2</m:cn>
+		    </m:logbase>
+		    <m:ci>
+		      <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+		    </m:ci>
+		  </m:apply>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:math>. This conversion law is illustrated in <link target-id="figure3" strength="2"/> and shows that probabilities
+	  close to zero or one produce low entropy and intermediate
+	  values produce entropies near 0.5.
+	</item>
+	<item>
+	  The entropies 
+	  <m:math>
+	    <m:ci>
+	      <m:msub><m:mi>h</m:mi><m:mi>i</m:mi></m:msub>
+	    </m:ci>
+	  </m:math> of the separate quantiser levels are summed to
+	  give the total entropy 
+	  <m:math>
+	    <m:ci>
+	      <m:msub><m:mi>H</m:mi><m:mi>x</m:mi></m:msub>
+	    </m:ci>
+	  </m:math> for the subimage.
+	</item>
+	<item>
+	  Multiplying 
+	  <m:math>
+	    <m:ci>
+	      <m:msub><m:mi>H</m:mi><m:mi>x</m:mi></m:msub>
+	    </m:ci>
+	  </m:math> by <m:math><m:ci>N</m:ci></m:math> gives the
+	  estimated total number of bits needed to code
+	  <m:math><m:ci>x</m:ci></m:math>, assuming an ideal entropy
+	  code is available which is matched to the histogram of
+	  <m:math><m:ci>x</m:ci></m:math>.
+	</item>
+      </list>
+    </para>   
+
+    <figure id="figure3">
+      <media id="idp830912" alt=""><image src="../../media/figure3-83f4.png" mime-type="image/png"/></media>
+      <caption>
+	Conversion from probability 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+	  </m:ci>
+	</m:math> to entropy 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>
+	      <m:msub><m:mi>h</m:mi><m:mi>i</m:mi></m:msub>
+	    </m:ci>
+	    <m:apply>
+	      <m:minus/>
+	      <m:apply>
+		<m:times/>
+		<m:ci>
+		  <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+		</m:ci>  
+		<m:apply>
+		  <m:log/>
+		  <m:logbase>
+		    <m:cn>2</m:cn>
+		  </m:logbase>
+		  <m:ci>
+		    <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+		  </m:ci>
+		</m:apply>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>.
+      </caption>
+    </figure>
+
+    <para id="para4">
+      <link target-id="figure4" strength="2"/> shows the probabilities 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+	</m:ci>
+      </m:math> and entropies 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>h</m:mi><m:mi>i</m:mi></m:msub>
+	</m:ci>
+      </m:math> for the original Lenna image and <link target-id="figure5" strength="2"/> shows these for each of the
+      subimages in this previous <link document="m11087" target-id="figure1" strength="2">figure</link>, assuming a uniform quantiser with a step-size 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>
+	    <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	  </m:ci>
+	  <m:cn>15</m:cn>
+	</m:apply>
+      </m:math> in each case. The original Lenna image contained pel
+      values from 3 to 238 and a mean level of 120 was subtracted from
+      each pel value before the image was analysed or transformed in
+      order that all samples would be approximately evenly distributed
+      about zero (a natural feature of highpass subimages).
+    </para>
+
+    <figure id="figure4">
+      <media id="idm9777392" alt=""><image src="../../media/figure4-0b0e.png" mime-type="image/png"/></media>
+      <caption>
+	Probability histogram (dashed) and entropies (solid) of the
+	Lenna image in (<link document="m11087" target-id="figure1a" strength="2">original image</link>). 
+      </caption>
+    </figure>
+
+    <figure id="figure5">
+      <media id="idm8650384" alt=""><image src="../../media/figure5-21e8.png" mime-type="image/png"/></media>
+      <caption>
+	Probability histogram (dashed) and entropies (solid) of the
+	four subimages of the Level 1 Haar transform of Lenna (see previous <link document="m11087" target-id="figure1b" strength="2">figure</link>). 
+      </caption>
+    </figure>
+
+    <para id="para5">
+      The Haar transform preserves energy and so the expected
+      distortion energy from quantising the transformed image
+      <m:math><m:ci>y</m:ci></m:math> with a given step size 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	</m:ci>
+      </m:math> will be approximately the same as that from quantising
+      the input image <m:math><m:ci>x</m:ci></m:math> with the same
+      step size. This is because quantising errors can usually be
+      modeled as independent random processes with variance (energy)
+      = 
+      <m:math>
+	<m:apply>
+	  <m:divide/>
+	  <m:apply>
+	    <m:power/>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	    </m:ci>
+	    <m:cn>2</m:cn>
+	  </m:apply>
+	  <m:cn>12</m:cn>
+	</m:apply>
+      </m:math> and the total squared quantising error (distortion)
+      will tend to the sum of the variances over all pels. This
+      applies whether the error energies are summed before or after
+      the inverse transform (reconstruction) in the decoder.
+    </para>
+
+    <para id="para6">
+      <emphasis>Hence equal quantiser step sizes before and after an
+      energy-preserving transformation should generate equivalent
+      quantising distortions and provide a fair estimate of the
+      compression achieved by the transformation.</emphasis>
+    </para>
+
+    <para id="para7">
+      The first two columns of <link target-id="figure6" strength="2"/>
+      (original and level 1) compare the entropy (mean bit rate) per
+      pel for the original image (3.71 bit / pel) with that of the
+      Haar transformed image of this previous <link document="m11087" target-id="figure1" strength="2">figure</link> (2.08 bit /
+      pel), using 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>
+	    <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	  </m:ci>
+	  <m:cn>15</m:cn>
+	</m:apply>
+      </m:math>. Notice that the entropy of the original image is
+      almost as great as the 4 bit / pel that would be needed to code
+      the 16 levels using a simple fixed-length code, because the
+      histogram is relatively uniform.
+    </para>
+
+    <para id="para8">
+      The level 1 column of <link target-id="figure6" strength="2"/>
+      shows the contribution of each of the subimages of this previous <link document="m11087" target-id="figure1b" strength="2">figure</link> to the total
+      entropy per pel (the entropies from <link target-id="figure5" strength="2"/> have been divided by 4 since each subimage has
+      one quarter of the total number of pels). the Lo-Lo subimage
+      contributes 56% to the total entropy (bit rate) and has similar
+      spatial correlations to the original image. Hence it is a
+      logical step to apply the Haar transform again to this subimage.
+    </para>
+
+    <figure id="figure6">
+      <media id="idm57536" alt=""><image src="../../media/figure6-9011.png" mime-type="image/png"/></media>
+      <caption>
+	Mean bit rate for the original Lenna image and for the Haar
+	transforms of the image after 1 to 4 levels, using a quantiser
+	step size 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	    </m:ci>
+	    <m:cn>15</m:cn>
+	  </m:apply>
+	</m:math>.
+      </caption>
+    </figure>
+
+  </content>
+  
+</document>

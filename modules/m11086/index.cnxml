@@ -1,0 +1,175 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>A Basic Image Compression Example</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>cd24760f-0f85-4355-8241-e76e47bf6ae2</md:uuid>
+</metadata>
+
+  <content>
+    <para id="para1">
+      We shall represent a monochrome (luminance) image by a matrix
+      <m:math><m:ci type="matrix">x</m:ci></m:math> whose elements are 
+      <m:math>
+	<m:apply>
+	  <m:ci type="fn">x</m:ci>
+	  <m:ci type="vector">n</m:ci>
+	</m:apply>
+      </m:math>, where 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci type="vector">n</m:ci>
+	  <m:matrix>
+	    <m:matrixrow>
+	      <m:ci>
+		<m:msub><m:mi>n</m:mi><m:mn>1</m:mn></m:msub>
+	      </m:ci>
+	      <m:ci>
+		<m:msub><m:mi>n</m:mi><m:mn>2</m:mn></m:msub>
+	      </m:ci>
+	    </m:matrixrow>
+	  </m:matrix>
+	</m:apply>
+      </m:math> is the integer vector of row and column indexes. The
+      energy of <m:math><m:ci type="matrix">x</m:ci></m:math> is
+      defined as 
+      <equation id="eq1">
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>Energy of x</m:ci>
+	    <m:apply>
+	      <m:sum/>
+	      <m:domainofapplication>
+		<m:ci type="vector">n</m:ci>
+	      </m:domainofapplication>
+	      <m:apply>
+		<m:power/>
+		<m:apply>
+		  <m:ci type="fn">x</m:ci>
+		  <m:ci type="vector">n</m:ci>
+		</m:apply>  
+		<m:cn>2</m:cn>
+	      </m:apply>
+	    </m:apply>
+	  </m:apply>
+	</m:math>
+      </equation>
+
+      where the sum is performed over all
+      <m:math><m:ci type="vector">n</m:ci></m:math> in <m:math><m:ci type="matrix">x</m:ci></m:math>.
+    </para>
+    
+    
+    <figure id="figure1">
+      <media id="idp7293264" alt=""><image src="../../media/figure1-f830.png" mime-type="image/png"/></media>
+      <caption>
+	The basic block diagram of an image coding system.
+      </caption>
+    </figure>
+
+    <para id="para2">
+      <link target-id="figure1" strength="2"/> shows the main blocks in
+      any image coding system. The decoder is the inverse of the
+      encoder. The three encoder blocks perform the following tasks: 
+      <list id="list1">
+	<item>
+	  <term>Energy compression</term> - This is usually a
+	  transformation or filtering process which aims to
+	  concentrate a high proportion of the energy of the image
+	  <m:math><m:ci type="matrix">x</m:ci></m:math> into as few
+	  samples (coefficients) of <m:math><m:ci type="matrix">y</m:ci></m:math> as 
+	  possible while preserving  
+	  the total energy of <m:math><m:ci type="matrix">x</m:ci></m:math> in
+	  <m:math><m:ci type="matrix">y</m:ci></m:math>. This
+	  minimises the number  
+	  of non-zero samples of <m:math><m:ci type="matrix">y</m:ci></m:math> which 
+	  need to be transmitted for a given level of distortion in
+	  the reconstructed image  
+	  <m:math>
+	    <m:ci type="matrix">
+	      <m:mover accent="true">
+		<m:mi>x</m:mi>
+		<m:mo>^</m:mo>
+	      </m:mover>
+	    </m:ci>
+	  </m:math>.
+	</item>
+
+	<item>
+	  <term>Quantisation</term> - This represents the samples of
+	  <m:math><m:ci type="matrix">y</m:ci></m:math> to a given
+	  level of accuracy in the integer matrix <m:math><m:ci type="matrix">q</m:ci></m:math>. The quantiser step size
+	  controls the tradeoff between distortion and bit rate and
+	  may be adapted to take account of human visual
+	  sensitivities. The inverse quantiser reconstructs 
+	  <m:math>
+	    <m:ci type="matrix">
+	      <m:mover accent="true">
+		<m:mi>y</m:mi>
+		<m:mo>^</m:mo>
+	      </m:mover>
+	    </m:ci>
+	  </m:math>, the best estimate of
+	  <m:math><m:ci type="matrix">y</m:ci></m:math> from <m:math><m:ci type="matrix">q</m:ci></m:math>.
+	</item>
+	<item>
+	  <term>Entropy coding</term> - This encodes the integers in
+	  <m:math><m:ci type="matrix">q</m:ci></m:math> into a serial
+	  bit stream <m:math><m:ci type="matrix">d</m:ci></m:math>, using
+	  variable-length entropy codes which attempt to minimise the
+	  total number of bits in <m:math><m:ci type="matrix">d</m:ci></m:math>,
+	  based on the statistics (PDFs) of various classes of samples
+	  in <m:math><m:ci type="matrix">q</m:ci></m:math>.
+	</item>
+      </list>
+
+      The energy compression / reconstruction and the entropy coding /
+      decoding processes are normally all lossless. Only the quantiser
+      introduces loss and distortion: 
+      <m:math>
+	<m:ci type="matrix">
+	  <m:mover accent="true">
+	    <m:mi>y</m:mi>
+	    <m:mo>^</m:mo>
+	  </m:mover>
+	</m:ci>
+      </m:math> is a distorted version of
+      <m:math><m:ci type="matrix">y</m:ci></m:math>, and hence 
+      <m:math>
+	<m:ci type="matrix">
+	  <m:mover accent="true">
+	    <m:mi>x</m:mi>
+	    <m:mo>^</m:mo>
+	  </m:mover>
+	</m:ci>
+      </m:math> is a distorted version of <m:math><m:ci type="matrix">x</m:ci></m:math>. In the absence of quantisation,
+      if 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci type="matrix">
+	    <m:mover accent="true">
+	      <m:mi>y</m:mi>
+	      <m:mo>^</m:mo>
+	    </m:mover>
+	  </m:ci>
+	  <m:ci type="matrix">y</m:ci>
+	</m:apply>
+      </m:math>, then 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci type="matrix">
+	    <m:mover accent="true">
+	      <m:mi>x</m:mi>
+	      <m:mo>^</m:mo>
+	    </m:mover>
+	  </m:ci>
+	  <m:ci type="matrix">x</m:ci>
+	</m:apply>
+      </m:math>.
+    </para>   
+  </content>
+  
+</document>

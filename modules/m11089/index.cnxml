@@ -1,0 +1,251 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>The Multi-level Haar Transform</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>3541deb5-ad36-474b-b129-2bbb4dc5455f</md:uuid>
+</metadata>
+
+  <content>
+    <para id="para1">
+      (a) of <link target-id="figure7" strength="2"/> shows the result of
+      applying the Haar transform to the Lo-Lo subimage of this previous <link document="m11087" target-id="figure1b" strength="2">figure</link> and <link target-id="figure8" strength="2"/> shows the probabilities 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+	</m:ci>
+      </m:math> and entropies 
+      <m:math>
+	<m:ci>
+	  <m:msub><m:mi>h</m:mi><m:mi>i</m:mi></m:msub>
+	</m:ci>
+      </m:math> for the 4 new subimages.
+    </para>
+
+    <para id="para2">
+      The level 2 column of the figure <link document="m11088" target-id="figure6" strength="2">Cumulative Entropies of Subimages for Qstep=15</link> shows how the total bit rate can be reduced by
+      transforming the level 1 Lo-Lo subimage into four level 2
+      subimages. The process can be repeated by transforming the final
+      Lo-Lo subimage again and again, giving the subimages in (b) of
+      <link target-id="figure7" strength="2"/> and (c) of <link target-id="figure7" strength="2"/> and the histograms in <link target-id="figure9" strength="2"/> and <link target-id="figure10" strength="2"/>. The levels 3 and 4 columns of  the figure <link document="m11088" target-id="figure6" strength="2">Cumulative Entropies of Subimages for Qstep=15</link>  show that little
+      is gained by transforming to more than 4 levels.
+    </para>
+
+    <para id="para3">
+      <emphasis>However a total compression ratio of 4 bit/pel : 1.61
+      bit/pel = 2.45 : 1 has been achieved (in theory).</emphasis>
+    </para>
+
+    <figure id="figure7">
+      <media id="idm6552256" alt=""><image src="../../media/figure7-340f.png" mime-type="image/png"/></media>
+      <caption>
+	Levels 2(a), 3(b), and 4(c) Haar transforms of Lenna; and at
+	all of levels 1 to 4(d).
+      </caption>
+    </figure>
+
+    <figure id="figure8">
+      <media id="idp6380320" alt=""><image src="../../media/figure8-f657.png" mime-type="image/png"/></media>
+      <caption>
+	The probabilities 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+	  </m:ci>
+	</m:math> and entropies 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>h</m:mi><m:mi>i</m:mi></m:msub>
+	  </m:ci>
+	</m:math> for the 4 subimages at level 2.
+      </caption>
+    </figure>
+    
+    <figure id="figure9">
+      <media id="idp2220272" alt=""><image src="../../media/figure9-9073.png" mime-type="image/png"/></media>
+      <caption>
+	The probabilities 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+	  </m:ci>
+	</m:math> and entropies 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>h</m:mi><m:mi>i</m:mi></m:msub>
+	  </m:ci>
+	</m:math> for the 4 subimages at level 3.
+      </caption>
+    </figure>
+
+     <figure id="figure10">
+      <media id="idm70304" alt=""><image src="../../media/figure10-f8c2.png" mime-type="image/png"/></media>
+      <caption>
+	The probabilities 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+	  </m:ci>
+	</m:math> and entropies 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>h</m:mi><m:mi>i</m:mi></m:msub>
+	  </m:ci>
+	</m:math> for the 4 subimages at level 4.
+      </caption>
+    </figure>
+
+    <figure id="figure11">
+      <media id="idm7022384" alt=""><image src="../../media/figure11-b701.png" mime-type="image/png"/></media>
+      <caption>
+	Images reconstructed from (a) the original Lenna, and (b) the
+	4-level Haar transform, each quantised with 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	    </m:ci>
+	    <m:cn>15</m:cn>
+	  </m:apply>
+	</m:math>. The rms error of (a) = 4.3513, and of (b) = 3.5343.
+      </caption>
+    </figure>
+
+    <para id="para6">
+      Note the following features of the 4-level Haar transform:
+
+      <list id="list1">
+	<item>
+	  (d) of <link target-id="figure7" strength="2"/> shows the
+	  subimages from all 4 levels of the transform and illustrates
+	  the transform's <emphasis>multi-scale</emphasis> nature. It
+	  also shows that all the subimages occupy the same total area
+	  as the original and hence that the total number of transform
+	  output samples (coefficients) equals the number of input
+	  pels - there is <emphasis>no redundancy</emphasis>.
+	</item>
+
+	<item>
+	  From the Lo-Lo subimage histograms of the figure 
+	  <link document="m11088" target-id="figure5" strength="2">Haar Transform, Level 1 energies, and entropies for Qstep=15</link>, 
+	  <link target-id="figure8" strength="2"/>,
+	  <link target-id="figure9" strength="2"/> and 
+	  <link target-id="figure10" strength="2"/>, we see the
+	  magnitudes of the Lo-Lo subimage samples increasing with
+	  transform level. This is because energy is being conserved
+	  and most of it is being concentrated in fewer and fewer
+	  Lo-Lo samples. (The DC gain of the Lo-Lo filter of this previous <link document="m11087" target-id="eq4a" strength="2">equation</link> is 2.)
+	</item>
+
+	<item>
+	  We may reconstruct the image from the transform samples ((d)
+	  of <link target-id="figure7" strength="2"/>), quantised to 
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci>
+		<m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	      </m:ci>
+	      <m:cn>15</m:cn>
+	    </m:apply>
+	  </m:math>, by inverting the transform, using the right hand part of this
+	  <link document="m11087" target-id="eq4b" strength="2">equation</link>. We then get
+	  the image in (b) of <link target-id="figure11" strength="2"/>. Contrast this with (a) of <link target-id="figure11" strength="2"/>, obtained by quantising the pels of the
+	  original directly to 
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci>
+		<m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	      </m:ci>
+	      <m:cn>15</m:cn>
+	    </m:apply>
+	  </m:math>, in which contour artifacts are much more
+	  visible. Thus the transform provides improved subjective
+	  quality as well as significant data compression. The
+	  improved quality arises mainly from the high amplitude of
+	  the low frequency transform samples, which means that they
+	  are quantised to many more levels than the basic pels would
+	  be for a given 
+	  <m:math>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	    </m:ci>
+	  </m:math>.
+	</item>
+	
+	<item>
+	  If 
+	  <m:math>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	    </m:ci>
+	  </m:math> is doubled to 30, then the entropies of all the
+	  subimages are reduced as shown in <link target-id="figure12" strength="2"/> (compare this with the figure, <link document="m11088" target-id="figure6" strength="2">Cumulative Entropies of Subimages for Qstep=15</link> in which 
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci>
+		<m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	      </m:ci>
+	      <m:cn>15</m:cn>
+	    </m:apply>
+	  </m:math>). The mean bit rate with the 4-level Haar
+	  transform drops from 1.61 to 0.97 bit/pel. However the
+	  reconstructed image quality drops to that shown in (b) of
+	  <link target-id="figure13" strength="2"/>. For comparison, (a)
+	  of <link target-id="figure13" strength="2"/> shows the quality
+	  if <m:math><m:ci>x</m:ci></m:math> is directly quantised
+	  with 
+	  <m:math>
+	    <m:apply>
+	      <m:eq/>
+	      <m:ci>
+		<m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	      </m:ci>
+	      <m:cn>30</m:cn>
+	    </m:apply>
+	  </m:math>.
+	</item>
+      </list>
+    </para>
+    
+    <figure id="figure12">
+      <media id="idm6303936" alt=""><image src="../../media/figure12-5e1a.png" mime-type="image/png"/></media>
+      <caption>
+	Mean bit rate for the original Lenna image and for the Haar
+	transforms of the image after 1 to 4 levels, using a quantiser
+	step size 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	    </m:ci>
+	    <m:cn>30</m:cn>
+	  </m:apply>
+	</m:math>. 
+      </caption>
+    </figure>
+    
+    <figure id="figure13">
+      <media id="idm726944" alt=""><image src="../../media/figure13-c786.png" mime-type="image/png"/></media>
+      <caption>
+	Images reconstructed from (a) the original Lenna, and (b) the
+	4-level Haar transform, each quantised with 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	    </m:ci>
+	    <m:cn>30</m:cn>
+	  </m:apply>
+	</m:math>. The rms error of (a) = 8.6219, and of (b) = 5.8781.
+      </caption>
+    </figure>
+
+
+  </content>
+  
+</document>

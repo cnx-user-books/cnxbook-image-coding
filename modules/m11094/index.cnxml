@@ -1,0 +1,440 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>The 2-dimensional DCT</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>63616e63-cbfd-443f-8e38-1978dbdac0ed</md:uuid>
+</metadata>
+
+  <content>
+    <para id="para1">
+      In the <link document="m11087" target-id="eq4" strength="2">equation</link> from our discussion of the Haar transform:
+
+      <m:math display="block">
+	<m:apply>
+	  <m:eq/>
+	  <m:ci type="matrix">y</m:ci>
+	  <m:apply>
+	    <m:times/>
+	    <m:ci type="matrix">T</m:ci>
+	    <m:ci type="matrix">x</m:ci>
+	    <m:apply>
+	      <m:transpose/>
+	      <m:ci type="matrix">T</m:ci>
+	    </m:apply>
+	  </m:apply>
+	</m:apply>
+      </m:math>
+
+      and to invert:
+
+      <m:math display="block">
+	<m:apply>
+	  <m:eq/>
+	  <m:ci type="matrix">x</m:ci>
+	  <m:apply>
+	    <m:times/>
+	    <m:apply>
+	      <m:transpose/>
+	      <m:ci type="matrix">T</m:ci>
+	    </m:apply>
+	    <m:ci type="matrix">y</m:ci>
+	    <m:ci type="matrix">T</m:ci>
+	  </m:apply>
+	</m:apply>
+      </m:math>
+
+      we saw how a 1-D transform could be extended to 2-D by pre- and
+      post-multiplication of a square matrix <m:math><m:ci type="matrix">x</m:ci></m:math> to give a matrix result
+      <m:math><m:ci type="matrix">y</m:ci></m:math>. Our example then
+      used 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>2</m:cn>
+	  <m:cn>2</m:cn>
+	</m:apply>
+      </m:math> matrices, but this technique applies to square
+      matrices of any size.
+    </para>
+
+    <para id="para2">
+      Hence the DCT may be extended into 2-D by this method.
+    </para>
+
+    <para id="para3">
+      E.g. the 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> DCT transforms a subimage of 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> pels into a matrix of 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> DCT coefficients.
+    </para>
+
+    <para id="para4">
+      The 2-D basis functions, from which <m:math><m:ci type="matrix">x</m:ci></m:math> may be reconstructed, are given
+      by the 
+      <m:math>
+	<m:apply>
+	  <m:power/>
+	  <m:ci>n</m:ci>
+	  <m:cn>2</m:cn>
+	</m:apply>
+      </m:math> separate products of the columns of 
+      <m:math>
+	<m:apply>
+	  <m:transpose/>
+	  <m:ci type="matrix">T</m:ci>
+	</m:apply>
+      </m:math> with the rows of <m:math><m:ci type="matrix">T</m:ci></m:math>. These are shown for 
+       <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>n</m:ci>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> in
+      (a) of <link target-id="figure2" strength="2"/> as 64 subimages of
+      size 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> pels.
+    </para>
+
+    <para id="para5">
+      The result of applying the 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> DCT to the Lenna image is shown in (b) of <link target-id="figure2" strength="2"/>. Here each 
+       <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> block of pels <m:math><m:ci type="matrix">x</m:ci></m:math> is replaced by the 
+       <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> block of DCT coefficients <m:math><m:ci type="matrix">y</m:ci></m:math>. This shows the 
+       <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>8</m:cn>
+	  <m:cn>8</m:cn>
+	</m:apply>
+      </m:math> block structure clearly but is not very meaningful
+      otherwise.
+    </para>
+
+    <para id="para6">
+      Part(c) of <link target-id="figure2" strength="2"/> shows the same
+      data, reordered into 64 subimages of 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>32</m:cn>
+	  <m:cn>32</m:cn>
+	</m:apply>
+      </m:math> coefficients each so that each subimage contains all
+      the coefficients of a given type - e.g: the top left subimage
+      contains all the coefficients for the top left basis function
+      from (a) of <link target-id="figure2" strength="2"/>. The other
+      subimages and basis functions correspond in the same way.
+    </para>
+
+    <para id="para7">
+      We see the major energy concentration to the subimages in the
+      top left corner. (d) of <link target-id="figure2" strength="2"/> is
+      an enlargement of the top left 4 subimages of (c) of <link target-id="figure2" strength="2"/> and bears a strong similarity to
+      the group of third level Haar subimages in (b) of 
+      <link document="m11089" target-id="figure7" strength="2">this figure</link>. To
+      emphasise this the 
+      histograms and entropies of these 4 subimages are shown in <link target-id="figure3" strength="2"/>. 
+    </para>
+
+    <para id="para8">
+      Comparing <link target-id="figure3" strength="2"/> with this 
+      <link document="m11089" target-id="figure9" strength="2">figure</link>, the Haar
+      transform equivalent, we see that the Lo-Lo bands have identical
+      energies and entropies. This is because the basis functions are
+      identical flat surfaces in both cases. Comparing the other 3
+      bands, we see that the DCT bands contain more energy and entropy
+      than their Haar equivalents, which means
+      <emphasis>less</emphasis> energy (and so hopefully less entropy)
+      in the higher DCT bands (not shown) because the total energy is
+      fixed (the transforms all preserve total energy). The mean
+      entropy for all 64 subimages is 1.3622 bit/pel, which compares
+      favourably with the 1.6103 bit/pel for the 4-level Haar
+      transformed subimages using the same 
+      <m:math>
+	<m:apply>
+	  <m:eq/>
+	  <m:ci>
+	    <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	  </m:ci>
+	  <m:cn>15</m:cn>
+	</m:apply>
+      </m:math>.
+    </para>   
+
+    <figure id="figure2">
+      <media id="idm9018864" alt=""><image src="../../media/figure2-5b77.png" mime-type="image/png"/></media>
+      <caption>
+	(a) Basis functions of the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>8</m:cn>
+	    <m:cn>8</m:cn>
+	  </m:apply>
+	</m:math> DCT; (b) Lenna transformed by the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>8</m:cn>
+	    <m:cn>8</m:cn>
+	  </m:apply>
+	</m:math> DCT; (c) reordered into subimages grouped by
+	coefficient type; (d) top left 4 subimages from (c).
+      </caption>
+    </figure>
+
+    <figure id="figure3">
+      <media id="idm756944" alt=""><image src="../../media/figure3-cb79.png" mime-type="image/png"/></media>
+      <caption>
+	The probabilities 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>p</m:mi><m:mi>i</m:mi></m:msub>
+	  </m:ci>
+	</m:math> and entropies 
+	<m:math>
+	  <m:ci>
+	    <m:msub><m:mi>h</m:mi><m:mi>i</m:mi></m:msub>
+	  </m:ci>
+	</m:math> for the 4 subimages from the top left of the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>8</m:cn>
+	    <m:cn>8</m:cn>
+	  </m:apply>
+	</m:math> DCT ((d) of <link target-id="figure2" strength="2"/>).
+      </caption>
+    </figure>
+
+    <figure id="figure4">
+      <media id="idm807600" alt=""><image src="../../media/figure4-4d3f.png" mime-type="image/png"/></media>
+      <caption>
+	(a) Mesh and (b) row plots of the entropies of the subimages
+	of (c) of <link target-id="figure2" strength="2"/>.
+      </caption>
+    </figure>
+
+    <figure id="figure5">
+      <media id="idm9115376" alt=""><image src="../../media/figure5-2047.png" mime-type="image/png"/></media>
+      <caption>
+	Lenna transformed by the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>4</m:cn>
+	    <m:cn>4</m:cn>
+	  </m:apply>
+	</m:math> DCT (a) and 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>16</m:cn>
+	    <m:cn>16</m:cn>
+	  </m:apply>
+	</m:math> DCT (b).
+      </caption>
+    </figure>
+
+    <section id="sec1">
+      <title>What is the optimum DCT size?</title>
+      <para id="sec1para1">
+	This is a similar question to: What is the optimum number of
+	levels for the Haar transform? 
+      </para>
+
+      <para id="sec1para2">
+	We have analysed Lenna using DCT sizes from 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>2</m:cn>
+	    <m:cn>2</m:cn>
+	  </m:apply>
+	</m:math> to 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>16</m:cn>
+	    <m:cn>16</m:cn>
+	  </m:apply>
+	</m:math> to investigate this. <link target-id="figure5" strength="2"/> shows the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>4</m:cn>
+	    <m:cn>4</m:cn>
+	  </m:apply>
+	</m:math> and 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>16</m:cn>
+	    <m:cn>16</m:cn>
+	  </m:apply>
+	</m:math> sets of DCT subimages. The 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>2</m:cn>
+	    <m:cn>2</m:cn>
+	  </m:apply>
+	</m:math> DCT is identical to the level 1 Haar transform (so
+	see (b) of  <link target-id="figure2" strength="2"/>) and the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>8</m:cn>
+	    <m:cn>8</m:cn>
+	  </m:apply>
+	</m:math> set is in (c) of <link target-id="figure2" strength="2"/>.
+      </para>
+
+      <para id="sec1para3">
+	<link target-id="figure6" strength="2"/> and 
+	<link target-id="figure7" strength="2"/> show the mesh plots of
+	the entropies of the subimages in <link target-id="figure5" strength="2"/>.
+      </para>
+
+      <para id="sec1para4">
+	<link target-id="figure8" strength="2"/> compares the total
+	entropy per pel for the 4 DCT sizes with the equivalent 4 Haar
+	transform sizes. We see that the DCT is significantly better
+	than the rather simpler Haar transform.
+      </para>
+
+      <para id="sec1para5">
+	As regards the optimum DCT size, from <link target-id="figure8" strength="2"/>, the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>16</m:cn>
+	    <m:cn>16</m:cn>
+	  </m:apply>
+	</m:math> DCT seems to be marginally better than the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>8</m:cn>
+	    <m:cn>8</m:cn>
+	  </m:apply>
+	</m:math> DCT, but subjectively this is not the case since
+	quantisation artefacts become more visible as the block size
+	increases. In practise, for a wide range of images and viewing
+	conditions, 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>8</m:cn>
+	    <m:cn>8</m:cn>
+	  </m:apply>
+	</m:math> has been found to be the optimum DCT block size and
+	is specified in most current coding standards.
+      </para>
+    </section>
+    
+    <figure id="figure6">
+      <media id="idm3084320" alt=""><image src="../../media/figure6-051a.png" mime-type="image/png"/></media>
+      <caption>
+	(a) Mesh and (b) row plots of the entropies of the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>4</m:cn>
+	    <m:cn>4</m:cn>
+	  </m:apply>
+	</m:math> DCT in (a) of <link target-id="figure5" strength="2"/>.
+      </caption>
+    </figure>
+    
+    <figure id="figure7">
+      <media id="idm323472" alt=""><image src="../../media/figure7-d857.png" mime-type="image/png"/></media>
+      <caption>
+	(a) Mesh and (b) row plots of the entropies of the 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>16</m:cn>
+	    <m:cn>16</m:cn>
+	  </m:apply>
+	</m:math> DCT in (b) of <link target-id="figure5" strength="2"/>.
+      </caption>
+    </figure>
+    
+    <figure id="figure8">
+      <media id="idp1455520" alt=""><image src="../../media/figure8-4a01.png" mime-type="image/png"/></media>
+      <caption>
+	Comparison of the mean entropies of the Haar transform of
+	Lenna at levels 1 to 4, and of the DCT for sizes from 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>2</m:cn>
+	    <m:cn>2</m:cn>
+	  </m:apply>
+	</m:math> to 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>16</m:cn>
+	    <m:cn>16</m:cn>
+	  </m:apply>
+	</m:math> pels with 
+	<m:math>
+	  <m:apply>
+	    <m:eq/>
+	    <m:ci>
+	      <m:msub><m:mi>Q</m:mi><m:mi>step</m:mi></m:msub>
+	    </m:ci>
+	    <m:cn>15</m:cn>
+	  </m:apply>
+	</m:math>.
+      </caption>
+    </figure>
+    
+  </content>
+  
+</document>

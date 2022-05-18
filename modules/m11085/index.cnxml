@@ -1,0 +1,136 @@
+<document xmlns="http://cnx.rice.edu/cnxml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:md="http://cnx.rice.edu/mdml">
+  
+  <title>Image Characteristics</title>
+  
+  <metadata><md:content-id>undefined</md:content-id><md:title/><md:uuid>6abec136-d517-46e3-a4bd-95b306b5c6c1</md:uuid>
+</metadata>
+
+  <content>
+    <para id="para1">
+    We now consider statistical characteristics of typical images
+    which can permit compression. If all images comprised dots with
+    uncorrelated random intensities, then each pel would need to be
+    coded independently and we could not achieve any useful
+    gains. However typical images are very different from random dot
+    patterns and significant compression gains are possible.
+    </para>  
+
+    <para id="para2">
+      Some compression can be achieved even if no additional
+      distortion is permitted (<term>lossless coding</term>) but much
+      greater compression is possible if some additional distortion is
+      allowed (<term>lossy coding</term>). Lossy coding is the main
+      topic of this course but we try to keep the added distortions
+      near or below the human <link document="m11084" target-id="sec3" strength="3">visual sensitivity</link> thresholds discussed
+      previously.
+    </para>
+
+    <para id="para3">
+      Statistical characteristics of signals can often be most readily
+      appreciated by frequency domain analysis since the power
+      spectrum is the Fourier transform of the autocorrelation
+      function. The 2-D FFT is a convenient tool for analysing
+      images. <link target-id="figure1" strength="2"/> shows the 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>256</m:cn>
+	  <m:cn>256</m:cn>
+	</m:apply>
+      </m:math> pel 'Lenna' image and its Fourier log power
+      spectrum. Zero frequency is at the centre of the spectrum image
+      and the log scale shows the lower spectral components much more
+      clearly. 
+    </para>
+    
+    <figure id="figure1">
+      <media id="idp8493392" alt=""><image src="../../media/figure1-1fcf.png" mime-type="image/png"/></media>
+      <caption>
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>256</m:cn>
+	    <m:cn>256</m:cn>
+	  </m:apply>
+	</m:math> pel 'Lenna' image and its Fourier log power
+	spectrum. 
+      </caption>
+    </figure>
+
+    <para id="para4">
+      The bright region near the centre of the spectrum shows that the
+      main concentration of image energy is at low frequencies, which
+      implies strong correlation between nearby pels and is typical of
+      real-world images. The diagonal line of spectral energy at about
+      -30° is due to the strong diagonal edges of the hat normal
+      to this direction. Similarly the near-horizontal spectral line
+      comes from the strong near-vertical stripe of hair to the right
+      of the face. Any other features are difficult to distinguish in
+      this global spectrum.
+    </para>
+
+    <para id="para5">   
+      A key property of real-world images is that their statistics are
+      not stationary over the image. <link target-id="figure2" strength="2"/> demonstrates this by splitting the 'Lenna' image
+      into 64 blocks of 
+      <m:math>
+	<m:apply>
+	  <m:times/>
+	  <m:cn>32</m:cn>
+	  <m:cn>32</m:cn>
+	</m:apply>
+      </m:math> pels, and calculating the Fourier log power spectrum
+      of each block. The wide variation in spectra is clearly
+      seen. Blocks with dominant edge directions produce spectra with
+      lines normal to the edges, and those containing the feathers of
+      the hat generate a broad spread of energy at all
+      frequencies. However a bright centre, indicating dominant low
+      frequency components, is common to all blocks.
+    </para>
+
+    <figure id="figure2">
+      <media id="idp8462736" alt=""><image src="../../media/figure2-f896.png" mime-type="image/png"/></media>
+      <caption>
+	Fourier log power spectra of 'Lenna' image split into 64
+	blocks of 
+	<m:math>
+	  <m:apply>
+	    <m:times/>
+	    <m:cn>32</m:cn>
+	    <m:cn>32</m:cn>
+	  </m:apply>
+	</m:math> pels.
+      </caption>
+    </figure>
+
+    <para id="para6">
+      We conclude that in many regions of a typical image, most of the
+      signal energy is contained in a relatively small number of
+      spectral components, many of which are at low
+      frequencies. However, between regions, the location of the main
+      components changes significantly.
+    </para>
+
+    <para id="para7">
+      <emphasis>The concentration of spectral energy is the key to
+      compression. If a signal can be reconstructed from its Fourier
+      transform, and many of the transform coefficients are very
+      small, then a close approximation to the original can be
+      reconstructed from just the larger transform coefficients, so
+      only these coefficients need be transmitted</emphasis>.
+    </para>
+
+    <para id="para8">
+      In practice, the Fourier transform is not very suitable for
+      compression because it generates complex coefficients and it is
+      badly affected by discontinuities at block boundaries (half-sine
+      windowing was used in <link target-id="figure1" strength="3"/> and
+      <link target-id="figure2" strength="3"/> to reduce boundary effects
+      but this would prevent proper reconstruction of the image). In
+      <link document="m11087" strength="3">further discussion</link>, we
+      demonstrate the principles of image compression using the Haar
+      transform, perhaps the simplest of all transforms.
+    </para>
+
+  </content>
+</document>
